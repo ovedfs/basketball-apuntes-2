@@ -118,6 +118,15 @@ ul.list li, ol.list li{margin-bottom:.35rem;}
 .fc-back{background:var(--naranja);color:#fff;transform:rotateY(180deg);font-weight:500;}
 .fc-hint{position:absolute;bottom:6px;right:10px;font-size:.65rem;opacity:.6;}
 
+/* ===== Estudio de flashcards (contador + progreso) ===== */
+.fc-study-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:.5rem;}
+.fc-study-pct{color:var(--naranja-2);}
+.fc-study-track{height:8px;background:#E8EAED;border-radius:999px;overflow:hidden;margin-bottom:1rem;}
+.fc-study-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--naranja-2),var(--naranja));border-radius:999px;transition:width .2s;}
+.fc-study-card{height:220px;cursor:pointer;}
+.fc-study-nav{display:flex;justify-content:space-between;gap:.6rem;margin-top:1rem;}
+.fc-study-nav .btn-secondary{flex:1;}
+
 /* ===== Juegos ===== */
 .subtabs{display:flex;gap:.5rem;margin-bottom:1.2rem;}
 .subtab-btn{border:2px solid var(--azul);background:#fff;color:var(--azul);padding:.5rem 1.1rem;border-radius:10px;font-weight:700;font-size:.85rem;}
@@ -494,7 +503,24 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
 
   <!-- ======================= VISTA FLASHCARDS ======================= -->
   <main class="view" id="view-flashcards" aria-label="Flashcards de memoria" tabindex="-1">
-    <div class="card"><h2>🃏 Flashcards de Memoria</h2><p>Haz clic en cada tarjeta para girarla y ver la respuesta. Repite hasta memorizar todos los conceptos.</p></div>
+    <div class="card"><h2>🃏 Flashcards de Memoria</h2><p>Repasa las tarjetas una a una con Anterior/Siguiente, o explora la cuadrícula completa abajo. Haz clic en cada tarjeta para girarla.</p></div>
+    <div class="card fc-study">
+      <div class="fc-study-head">
+        <strong id="fcCounter">Tarjeta 1 de 0</strong>
+        <span class="fc-study-pct" id="fcStudyPct">0%</span>
+      </div>
+      <div class="fc-study-track"><div class="fc-study-fill" id="fcStudyFill"></div></div>
+      <div class="fc fc-study-card" id="fcStudyCard">
+        <div class="fc-inner">
+          <div class="fc-face fc-front" id="fcStudyFront"></div>
+          <div class="fc-face fc-back" id="fcStudyBack"></div>
+        </div>
+      </div>
+      <div class="fc-study-nav">
+        <button class="btn-secondary" id="fcPrev" aria-label="Tarjeta anterior">⬅ Anterior</button>
+        <button class="btn-secondary" id="fcNext" aria-label="Tarjeta siguiente">Siguiente ➡</button>
+      </div>
+    </div>
     <div class="fc-grid" id="fcGrid"></div>
   </main>
 

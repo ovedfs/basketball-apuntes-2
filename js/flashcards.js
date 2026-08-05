@@ -1,5 +1,5 @@
 /* =================================================================
-   FLASHCARDS render
+   FLASHCARDS render (cuadrícula completa)
 ================================================================= */
 const fcGrid = document.getElementById('fcGrid');
 FC.forEach(([front,back])=>{
@@ -16,3 +16,41 @@ FC.forEach(([front,back])=>{
   });
   fcGrid.appendChild(el);
 });
+
+/* =================================================================
+   Estudio por tarjetas: contador "Tarjeta X / Y" + barra de progreso
+================================================================= */
+const fcStudyCard = document.getElementById('fcStudyCard');
+if(fcStudyCard){
+  const fcCounter   = document.getElementById('fcCounter');
+  const fcStudyPct  = document.getElementById('fcStudyPct');
+  const fcStudyFill = document.getElementById('fcStudyFill');
+  const fcStudyFront= document.getElementById('fcStudyFront');
+  const fcStudyBack = document.getElementById('fcStudyBack');
+  const fcPrev      = document.getElementById('fcPrev');
+  const fcNext      = document.getElementById('fcNext');
+  const total = FC.length;
+  let fcIndex = 0;
+
+  function renderStudyCard(){
+    fcStudyFront.innerHTML = FC[fcIndex][0] + '<span class="fc-hint">clic para girar</span>';
+    fcStudyBack.innerHTML = FC[fcIndex][1];
+    fcStudyCard.classList.remove('flipped');
+    fcCounter.textContent = 'Tarjeta '+(fcIndex+1)+' de '+total;
+    const pct = total>0 ? Math.round(((fcIndex+1)/total)*100) : 0;
+    fcStudyPct.textContent = pct+'%';
+    fcStudyFill.style.width = pct+'%';
+    fcPrev.disabled = fcIndex===0;
+    fcNext.disabled = fcIndex===total-1;
+  }
+
+  fcStudyCard.setAttribute('role','button');
+  fcStudyCard.setAttribute('tabindex','0');
+  fcStudyCard.addEventListener('click',()=>fcStudyCard.classList.toggle('flipped'));
+  fcStudyCard.addEventListener('keydown',(e)=>{
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();fcStudyCard.classList.toggle('flipped');}
+  });
+  fcPrev.addEventListener('click',()=>{ if(fcIndex>0){fcIndex--;renderStudyCard();} });
+  fcNext.addEventListener('click',()=>{ if(fcIndex<total-1){fcIndex++;renderStudyCard();} });
+  renderStudyCard();
+}
