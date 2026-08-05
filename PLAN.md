@@ -58,8 +58,8 @@
 **Cambios**: Añadir toggle, variables CSS para dark mode, persistencia en localStorage, respetar `prefers-color-scheme`.
 **Prueba**: Toggle, recargar página (debe persistir), verificar en modo oscuro del sistema.
 
-### 11. Progreso persistente en localStorage
-**Archivos**: `index.html` (JS)
+### 11. Progreso persistente en localStorage ✅ (commit 940ae5b)
+**Archivos**: `index.html`, `js/exam.js`, `js/flashcards.js`
 **Cambios**: Guardar estado de flashcards vistas y último examen, permitir retomar.
 **Prueba**: Completar parcialmente flashcards, recargar, verificar que se retoma desde donde se dejó.
 
