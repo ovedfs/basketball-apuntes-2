@@ -53,6 +53,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .tab-btn{border:none;background:transparent;color:#cfd8e3;padding:.5rem 1rem;border-radius:999px;font-weight:600;font-size:.88rem;transition:.2s;}
 .tab-btn.active{background:var(--naranja);color:#fff;box-shadow:0 2px 8px rgba(255,111,0,.5);}
 .tab-btn:hover{color:#fff;}
+.theme-toggle{background:rgba(255,255,255,.12);border:none;color:#fff;width:38px;height:38px;border-radius:10px;font-size:1.05rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.theme-toggle:hover{background:var(--naranja);}
 
 /* ===== Layout ===== */
 .app-shell{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start;}
@@ -162,6 +164,7 @@ ul.list li, ol.list li{margin-bottom:.35rem;}
 .btn-secondary{background:#fff;color:var(--azul);border:2px solid var(--azul);border-radius:10px;padding:.7rem 1.4rem;font-weight:700;font-size:.9rem;}
 .exam-feedback{background:var(--amber-bg);border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.87rem;display:none;}
 .exam-timer{font-family:'Poppins',sans-serif;font-weight:700;color:var(--naranja-2);}
+.timer-select{padding:.5rem .8rem;border-radius:8px;border:2px solid var(--azul-2);background:#fff;color:var(--azul);font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;max-width:100%;}
 .score-ring{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;position:relative;}
 .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;text-align:center;margin:1.2rem 0;}
 .result-box{border-radius:10px;padding:1rem;font-weight:700;}
@@ -186,6 +189,52 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
   .sidebar{display:none;}
   .app-shell{flex-direction:column;}
 }
+
+/* ===== Dark Mode ===== */
+[data-theme="dark"]{
+  --fondo:#0d1117;
+  --card:#161b22;
+  --amber-bg:#2b2410;
+  --shadow:0 4px 14px rgba(0,0,0,.5);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.65);
+  color-scheme:dark;
+}
+[data-theme="dark"] body{color:#e6edf3;background:var(--fondo);}
+[data-theme="dark"] h1,[data-theme="dark"] h2,[data-theme="dark"] h3,[data-theme="dark"] h4{color:#e6edf3;}
+[data-theme="dark"] a{color:#ff8a3d;}
+[data-theme="dark"] .card{background:var(--card);}
+[data-theme="dark"] .side-link{color:#9fb0c3;}
+[data-theme="dark"] .side-link:hover{background:#1c2530;}
+[data-theme="dark"] .side-link.active{background:#1B2A4A;color:#fff;}
+[data-theme="dark"] .jersey{background:#1c2530;}
+[data-theme="dark"] .subtab-btn{background:#1f2833;color:#e6edf3;border-color:#33506e;}
+[data-theme="dark"] .subtab-btn.active{background:var(--azul);color:#fff;}
+[data-theme="dark"] .match-item{background:#1f2833;border-color:#2b3643;color:#e6edf3;}
+[data-theme="dark"] .match-item.matched{background:#123524;border-color:#1E8E5A;}
+[data-theme="dark"] .match-item.wrong{background:#3a1a17;border-color:#C62828;}
+[data-theme="dark"] .board-controls button{background:#1f2833;color:#e6edf3;border-color:#33506e;}
+[data-theme="dark"] .board-controls button.active{background:var(--azul-2);color:#fff;}
+[data-theme="dark"] .opt-btn{background:#1f2833;border-color:#2b3643;color:#e6edf3;}
+[data-theme="dark"] .opt-btn.correct{background:#123524;border-color:#1E8E5A;}
+[data-theme="dark"] .opt-btn.incorrect{background:#3a1a17;border-color:#C62828;}
+[data-theme="dark"] .btn-secondary{background:#1f2833;color:#e6edf3;border-color:#33506e;}
+[data-theme="dark"] .exam-progress,
+[data-theme="dark"] .fc-study-track,
+[data-theme="dark"] .side-progress-track{background:#2b3643;}
+[data-theme="dark"] .match-status{color:#e6edf3;}
+[data-theme="dark"] .tip{background:#1c2530;border-color:#2b3643;color:#d9e0ea;}
+[data-theme="dark"] .tip.success{background:#123524;border-color:#1E8E5A;}
+[data-theme="dark"] th,[data-theme="dark"] td{border-bottom-color:#2b3643;}
+[data-theme="dark"] tr:nth-child(even){background:#161b22;}
+[data-theme="dark"] .match-item.selected{background:#33250f;border-color:var(--naranja);color:#ff9a3c;}
+[data-theme="dark"] .step5{border-color:#2b3643;}
+[data-theme="dark"] .report-row{border-bottom-color:#2b3643;}
+[data-theme="dark"] .report-row.wrong{background:#3a1a17;}
+[data-theme="dark"] .result-box.ok{background:#123524;color:#4ade80;}
+[data-theme="dark"] .result-box.bad{background:#3a1a17;color:#ff6b6b;}
+[data-theme="dark"] .timer-select{background:#1f2833;color:#e6edf3;border-color:#33506e;}
+[data-theme="dark"] .opt-btn:disabled{color:#7d8794;}
+[data-theme="dark"] .theme-toggle{color:#fff;}
 </style>
 </head>
 <body>
@@ -200,6 +249,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
     <button class="tab-btn" data-view="juegos">🎮 Mini-Juegos</button>
     <button class="tab-btn" data-view="examen">🧪 Examen</button>
   </nav>
+  <button class="theme-toggle" id="themeToggle" aria-label="Cambiar a modo oscuro">🌙</button>
 </header>
 
 <div class="app-shell">
@@ -574,7 +624,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
         <p>El sistema seleccionará <strong>30 preguntas al azar</strong> de un banco de más de 150, basadas íntegramente en el compendio. Se muestra una pregunta a la vez, con retroalimentación inmediata.</p>
         <div style="margin:1rem 0;">
           <label for="timerSelect" style="display:block;font-weight:600;font-size:.88rem;margin-bottom:.4rem;">Dificultad del temporizador por pregunta</label>
-          <select id="timerSelect" style="padding:.5rem .8rem;border-radius:8px;border:2px solid var(--azul-2);font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;background:#fff;">
+          <select id="timerSelect" class="timer-select">
             <option value="0">Sin temporizador</option>
             <option value="90">Fácil · 90s por pregunta</option>
             <option value="60" selected>Normal · 60s por pregunta</option>

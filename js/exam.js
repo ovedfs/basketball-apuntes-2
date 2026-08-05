@@ -82,7 +82,7 @@ function finishExam(){
   const ring = document.getElementById('scoreRing');
   const color = pct>=70?'var(--verde)':pct>=50?'var(--amber)':'var(--rojo)';
   ring.style.background = 'conic-gradient('+color+' '+(pct*3.6)+'deg, #E8EAED 0deg)';
-  ring.innerHTML = '<div style="background:#fff;border-radius:50%;width:112px;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="color:'+color+'">'+pct+'</span><span style="font-size:.6rem;color:#8a94a6;">/ 100</span></div>';
+  ring.innerHTML = '<div style="background:var(--card);border-radius:50%;width:112px;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="color:'+color+'">'+pct+'</span><span style="font-size:.6rem;color:#8a94a6;">/ 100</span></div>';
   document.getElementById('aciertosCount').textContent = aciertos;
   document.getElementById('erroresCount').textContent = errores;
 

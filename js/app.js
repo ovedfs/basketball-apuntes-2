@@ -96,3 +96,29 @@ if('serviceWorker' in navigator){
   });
 }
 
+/* =================================================================
+   Dark Mode: toggle + persistencia + prefers-color-scheme
+================================================================= */
+const themeToggle = document.getElementById('themeToggle');
+const THEME_KEY = 'basquetpro-theme';
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  try{ localStorage.setItem(THEME_KEY, t); }catch(e){}
+  if(themeToggle){
+    themeToggle.textContent = t==='dark' ? '☀️' : '🌙';
+    themeToggle.setAttribute('aria-label', t==='dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro');
+  }
+}
+let initialTheme;
+try{ initialTheme = localStorage.getItem(THEME_KEY); }catch(e){}
+if(!initialTheme){
+  initialTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+}
+applyTheme(initialTheme);
+if(themeToggle){
+  themeToggle.addEventListener('click',()=>{
+    const cur = document.documentElement.getAttribute('data-theme')==='dark' ? 'dark' : 'light';
+    applyTheme(cur==='dark' ? 'light' : 'dark');
+  });
+}
+
