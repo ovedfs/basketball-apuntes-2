@@ -33,3 +33,37 @@ const io = new IntersectionObserver((entries)=>{
 },{rootMargin:"-30% 0px -60% 0px"});
 sections.forEach(s=>io.observe(s));
 
+/* =================================================================
+   Lazy loading de vídeos embebidos (cargar solo al hacerse visibles)
+================================================================= */
+/*
+  Nota: los iframes con srcdoc NO se recargan en Chrome/Safari al
+  asignarles src después. Por eso reemplazamos el nodo por uno nuevo.
+*/
+function lazyLoadVideo(iframe){
+  if(!iframe.dataset.src) return;
+  const src = iframe.dataset.src;
+  const fresh = document.createElement('iframe');
+  ['title','allowfullscreen'].forEach(a=>{
+    const v = iframe.getAttribute(a);
+    if(v!==null) fresh.setAttribute(a,v);
+  });
+  fresh.setAttribute('loading','lazy');
+  fresh.setAttribute('src', src);
+  iframe.parentNode.replaceChild(fresh, iframe);
+}
+if('IntersectionObserver' in window){
+  const videoObserver = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting && e.target.dataset.src){
+        lazyLoadVideo(e.target);
+        videoObserver.unobserve(e.target);
+      }
+    });
+  },{rootMargin:'150px'});
+  document.querySelectorAll('iframe[data-src]').forEach(f=>videoObserver.observe(f));
+}else{
+  /* Fallback para navegadores antiguos: cargar inmediatamente */
+  document.querySelectorAll('iframe[data-src]').forEach(lazyLoadVideo);
+}
+
