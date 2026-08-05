@@ -32,7 +32,7 @@
 **Archivos**: `sw.js`, `manifest.json`, modificar `index.html` (registrar SW + link manifest)
 **Prueba**: En DevTools > Application > Service Workers, verificar que se registra y cachea correctamente. Abrir en modo offline.
 
-### 6. Scrollspy más refinado
+### 6. Scrollspy más refinado ✅ (commit 9717e86)
 **Archivos**: `index.html` (JS en app.js)
 **Cambios**: Mejorar el tracking de sección activa con IntersectionObserver + indicar progreso en sidebar.
 **Prueba**: Scrollear por los 10 módulos, el sidebar debe marcar correctamente la sección actual.
