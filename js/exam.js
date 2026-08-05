@@ -4,6 +4,41 @@
 let examQuestions = [], examIndex = 0, examAnswers = [], qSeconds=0, qTimerInterval=null;
 
 /* =================================================================
+   Feedback auditivo (Web Audio API) — opcional, persistido en localStorage
+================================================================= */
+let soundEnabled = true, audioCtx=null;
+const SOUND_KEY='basquetpro-exam-sound';
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playBeep(freq,dur,type){
+  try{
+    const ctx=getAudioCtx();
+    const o=ctx.createOscillator(); const g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type=type||'sine'; o.frequency.setValueAtTime(freq,ctx.currentTime);
+    g.gain.setValueAtTime(0.001,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.18,ctx.currentTime+0.015);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur/1000);
+    o.start(); o.stop(ctx.currentTime+dur/1000);
+  }catch(e){}
+}
+function playCorrectSound(){ playBeep(760,120,'sine'); setTimeout(()=>playBeep(1100,170,'sine'),140); }
+function playWrongSound(){ playBeep(260,260,'square'); }
+function initExamSound(){
+  const cb = document.getElementById('soundToggle');
+  if(!cb) return;
+  try{ cb.checked = (localStorage.getItem(SOUND_KEY)!=='false'); }catch(e){}
+  soundEnabled = cb.checked;
+  cb.addEventListener('change',()=>{
+    soundEnabled = cb.checked;
+    try{ localStorage.setItem(SOUND_KEY, cb.checked); }catch(e){}
+  });
+}
+
+/* =================================================================
    FUNCIONES DEL EXAMEN
 ================================================================= */
 function startExam(){
@@ -18,9 +53,7 @@ function startExam(){
   renderQuestion();
 }
 
-function renderQuestion(){
-  clearInterval(qTimerInterval);
-  const q = examQuestions[examIndex];
+function renderQuestion(){  clearInterval(qTimerInterval);  const q = examQuestions[examIndex];
   document.getElementById('qCounter').textContent = 'Pregunta '+(examIndex+1)+' / 30';
   document.getElementById('examProgressFill').style.width = ((examIndex)/30*100)+'%';
   document.getElementById('qText').textContent = q[1];
@@ -45,10 +78,11 @@ function renderQuestion(){
 }
 
 function answerQuestion(idx){
-  if(examAnswers[examIndex]!==null) return;
-  clearInterval(qTimerInterval);
-  const q = examQuestions[examIndex];
+  if(examAnswers[examIndex]!==null) return;  clearInterval(qTimerInterval);  const q = examQuestions[examIndex];
   examAnswers[examIndex] = idx;
+  if(soundEnabled){
+    if(idx===q[3]) playCorrectSound(); else playWrongSound();
+  }
   const buttons = document.querySelectorAll('#qOptions .opt-btn');
   buttons.forEach((b,i)=>{
     b.disabled = true;
@@ -119,3 +153,4 @@ document.getElementById('toggleReportBtn').addEventListener('click', ()=>{
   const r = document.getElementById('reportContent');
   r.style.display = r.style.display==='none' ? 'block' : 'none';
 });
+initExamSound();
