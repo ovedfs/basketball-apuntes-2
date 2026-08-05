@@ -30,8 +30,27 @@ const io = new IntersectionObserver((entries)=>{
       if(link) link.classList.add('active');
     }
   });
-},{rootMargin:"-30% 0px -60% 0px"});
+}, {rootMargin:"-30% 0px -60% 0px"});
 sections.forEach(s=>io.observe(s));
+
+/* Sidebar: indicador de progreso de lectura en Apuntes */
+const sideFill = document.getElementById('sideProgressFill');
+const sidePct = document.getElementById('sideProgressPct');
+function updateSideProgress(){
+  if(!sideFill || !sidePct || sections.length===0) return;
+  const y = window.scrollY;
+  const firstTop = sections[0].getBoundingClientRect().top + y;
+  const lastBottom = sections[sections.length-1].getBoundingClientRect().bottom + y;
+  const range = lastBottom - firstTop;
+  let pct = range>0 ? (y - firstTop)/range*100 : 100;
+  pct = Math.max(0, Math.min(100, pct));
+  sideFill.style.width = pct+'%';
+  sidePct.textContent = Math.round(pct)+'%';
+}
+window.addEventListener('scroll', updateSideProgress, {passive:true});
+window.addEventListener('resize', updateSideProgress);
+window.addEventListener('load', updateSideProgress);
+updateSideProgress();
 
 /* =================================================================
    Lazy loading de vídeos embebidos (cargar solo al hacerse visibles)

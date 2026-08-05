@@ -63,6 +63,10 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .side-link.active{background:var(--azul);color:#fff;box-shadow:var(--shadow);}
 .jersey{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:var(--fondo);color:var(--naranja-2);font-family:'Poppins',sans-serif;font-weight:800;font-size:.78rem;flex-shrink:0;border:2px solid var(--naranja-2);}
 .side-link.active .jersey{background:var(--naranja);color:#fff;border-color:var(--naranja);}
+.side-progress{margin-top:1.2rem;padding-top:1rem;border-top:1px solid #E8EAED;}
+.side-progress-label{display:flex;justify-content:space-between;font-size:.68rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--azul-2);margin-bottom:.45rem;}
+.side-progress-track{height:8px;background:#E8EAED;border-radius:999px;overflow:hidden;}
+.side-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--naranja-2),var(--naranja));border-radius:999px;transition:width .2s;}
 main.view{flex:1;min-width:0;padding:1.4rem 1.6rem 4rem;}
 main.view:not(.active){display:none;}
 
@@ -202,6 +206,10 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
     <a class="side-link" data-target="m8" href="#m8"><span class="jersey">08</span>Capacidades Físicas/Cognitivas</a>
     <a class="side-link" data-target="m9" href="#m9"><span class="jersey">09</span>Lesiones Deportivas</a>
     <a class="side-link" data-target="m10" href="#m10"><span class="jersey">10</span>Tecnología y Organismos</a>
+    <div class="side-progress">
+      <div class="side-progress-label"><span>Progreso de lectura</span><span id="sideProgressPct">0%</span></div>
+      <div class="side-progress-track"><div class="side-progress-fill" id="sideProgressFill"></div></div>
+    </div>
   </aside>
 
   <!-- ======================= VISTA APUNTES ======================= -->
