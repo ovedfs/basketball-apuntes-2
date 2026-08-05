@@ -35,6 +35,11 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 /* ===== Progreso de lectura ===== */
 #readbar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--naranja-2),var(--naranja));width:0%;z-index:999;transition:width .1s linear;}
 
+/* ===== Accesibilidad ===== */
+.skip-link{position:absolute;left:-999px;top:auto;width:1px;height:1px;overflow:hidden;}
+.skip-link:focus{position:fixed;left:1rem;top:1rem;width:auto;height:auto;background:var(--naranja);color:#fff;padding:.6rem 1rem;border-radius:8px;z-index:1000;font-weight:700;}
+:focus-visible{outline:3px solid var(--naranja);outline-offset:2px;}
+
 /* ===== Topbar ===== */
 .topbar{position:sticky;top:0;z-index:200;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;box-shadow:var(--shadow-lg);flex-wrap:wrap;gap:.5rem;}
 .brand{display:flex;align-items:center;gap:.6rem;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.5px;}
@@ -169,12 +174,13 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#view-apuntes">Saltar al contenido principal</a>
 <div id="readbar"></div>
 
 <header class="topbar">
-  <div class="brand"><span class="ball"></span> BasquetPro · Compendio Interactivo</div>
-  <nav class="tabs" id="mainTabs">
-    <button class="tab-btn active" data-view="apuntes">📘 Apuntes</button>
+  <div class="brand"><span class="ball" aria-hidden="true"></span> BasquetPro · Compendio Interactivo</div>
+  <nav class="tabs" id="mainTabs" aria-label="Navegación principal">
+    <button class="tab-btn active" data-view="apuntes" aria-current="true">📘 Apuntes</button>
     <button class="tab-btn" data-view="flashcards">🃏 Flashcards</button>
     <button class="tab-btn" data-view="juegos">🎮 Mini-Juegos</button>
     <button class="tab-btn" data-view="examen">🧪 Examen</button>
@@ -182,8 +188,8 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
 </header>
 
 <div class="app-shell">
-  <aside class="sidebar" id="sidebar">
-    <h4>Índice general</h4>
+  <aside class="sidebar" id="sidebar" aria-labelledby="sidebar-heading">
+    <h4 id="sidebar-heading">Índice general</h4>
     <a class="side-link" data-target="m1" href="#m1"><span class="jersey">01</span>Génesis y Evolución</a>
     <a class="side-link" data-target="m2" href="#m2"><span class="jersey">02</span>Terreno y Equipo</a>
     <a class="side-link" data-target="m3" href="#m3"><span class="jersey">03</span>Arbitraje</a>
@@ -197,7 +203,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
   </aside>
 
   <!-- ======================= VISTA APUNTES ======================= -->
-  <main class="view active" id="view-apuntes">
+  <main class="view active" id="view-apuntes" aria-label="Apuntes de estudio" tabindex="-1">
     <div class="hero">
       <div class="hero-text">
         <span class="hero-badge">Licenciatura en Cultura Física y Deportes</span>
@@ -205,13 +211,13 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
         <p>Compendio integral para el estudio de alto rendimiento: historia, reglamento, técnica, táctica, planificación, ciencia del entrenamiento y organización institucional del baloncesto.</p>
       </div>
       <div class="hoop-wrap">
-        <svg viewBox="0 0 190 190" width="190" height="190">
+        <svg viewBox="0 0 190 190" width="190" height="190" role="img" aria-label="Gráfico decorativo de una canasta de baloncesto" focusable="false">
           <rect x="70" y="10" width="60" height="42" rx="3" fill="#fff" opacity=".85"/>
           <rect x="70" y="10" width="60" height="42" rx="3" fill="none" stroke="#0D1B2A" stroke-width="3"/>
           <ellipse cx="100" cy="58" rx="26" ry="7" fill="none" stroke="#FF6F00" stroke-width="4"/>
           <path d="M78 60 L74 100 M122 60 L126 100 M90 60 L88 98 M110 60 L112 98 M100 60 L100 100" stroke="#fff" stroke-width="1.4" opacity=".8"/>
         </svg>
-        <div class="ball-anim"></div>
+        <div class="ball-anim" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -265,7 +271,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
       <div class="card">
         <div class="grid2">
           <div>
-            <svg viewBox="0 0 560 300" class="board-svg" style="width:100%;background:#B26A00;">
+            <svg viewBox="0 0 560 300" class="board-svg" style="width:100%;background:#B26A00;" role="img" aria-label="Diagrama de la cancha FIBA de baloncesto de 28 por 15 metros" focusable="false">
               <rect x="10" y="10" width="540" height="280" fill="none" stroke="#fff" stroke-width="3"/>
               <line x1="280" y1="10" x2="280" y2="290" stroke="#fff" stroke-width="2"/>
               <circle cx="280" cy="150" r="36" fill="none" stroke="#fff" stroke-width="2"/>
@@ -288,7 +294,8 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
         </div>
         <div class="table-wrap">
           <table>
-            <tr><th>Categoría</th><th>Uso</th><th>Circunferencia</th><th>Peso</th></tr>
+            <caption>Medidas y pesos reglamentarios de los balones de baloncesto por categoría</caption>
+            <tr><th scope="col">Categoría</th><th scope="col">Uso</th><th scope="col">Circunferencia</th><th scope="col">Peso</th></tr>
             <tr><td>#7</td><td>Varonil</td><td>74–76 cm</td><td>567–610 g</td></tr>
             <tr><td>#6</td><td>Femenil</td><td>72–73 cm</td><td>510–567 g</td></tr>
             <tr><td>#5</td><td>Infantil</td><td>69–70 cm</td><td>470–510 g</td></tr>
@@ -417,7 +424,8 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
       <div class="card">
         <div class="table-wrap">
           <table>
-            <tr><th>Fase Sensible</th><th>Edad</th><th>Categorías</th><th>Características</th></tr>
+            <caption>Fases sensibles del desarrollo del talento según la edad y categoría</caption>
+            <tr><th scope="col">Fase Sensible</th><th scope="col">Edad</th><th scope="col">Categorías</th><th scope="col">Características</th></tr>
             <tr><td>Iniciación</td><td>6–9 años</td><td>Micro e Infantil</td><td>100% lúdico, agilidad, coordinación ojo-mano</td></tr>
             <tr><td>Detección Activa</td><td>10–13 años</td><td>Pasarela y Cadete</td><td>Evaluaciones estructuradas, predicción de estatura, capacidad nerviosa técnica</td></tr>
             <tr><td>Especialización</td><td>14–17 años</td><td>Juvenil y Juvenil Mayor</td><td>Alto rendimiento, adaptación post-estirón puberal</td></tr>
@@ -443,7 +451,8 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
       <div class="card">
         <div class="table-wrap">
           <table>
-            <tr><th>Tipo</th><th>Detalle</th></tr>
+            <caption>Tipos y detalles de las lesiones deportivas más comunes en el baloncesto</caption>
+            <tr><th scope="col">Tipo</th><th scope="col">Detalle</th></tr>
             <tr><td>Fracturas</td><td>Agudas o por estrés</td></tr>
             <tr><td>Esguinces Grado I</td><td>Distensión ligamentosa</td></tr>
             <tr><td>Esguinces Grado II</td><td>Ruptura parcial</td></tr>
@@ -474,13 +483,13 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
   </main>
 
   <!-- ======================= VISTA FLASHCARDS ======================= -->
-  <main class="view" id="view-flashcards">
+  <main class="view" id="view-flashcards" aria-label="Flashcards de memoria" tabindex="-1">
     <div class="card"><h2>🃏 Flashcards de Memoria</h2><p>Haz clic en cada tarjeta para girarla y ver la respuesta. Repite hasta memorizar todos los conceptos.</p></div>
     <div class="fc-grid" id="fcGrid"></div>
   </main>
 
   <!-- ======================= VISTA MINI-JUEGOS ======================= -->
-  <main class="view" id="view-juegos">
+  <main class="view" id="view-juegos" aria-label="Mini-juegos educativos" tabindex="-1">
     <div class="card"><h2>🎮 Mini-Juegos Educativos</h2></div>
     <div class="subtabs">
       <button class="subtab-btn active" data-panel="panel-match">Juego de Emparejamiento</button>
@@ -489,7 +498,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
 
     <div class="game-panel active card" id="panel-match">
       <p>Selecciona un concepto y luego su definición correcta. Si aciertan, quedarán marcados en verde.</p>
-      <div class="match-status" id="matchStatus">Emparejadas: 0 / 12</div>
+      <div class="match-status" id="matchStatus" aria-live="polite">Emparejadas: 0 / 12</div>
       <div class="match-cols">
         <div id="matchTerms"></div>
         <div id="matchDefs"></div>
@@ -506,7 +515,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
         <button data-f="zona">Defensa Zonal 2-3</button>
       </div>
       <div class="board-wrap">
-        <svg viewBox="0 0 300 460" width="300" height="460" class="board-svg" id="boardSvg">
+        <svg viewBox="0 0 300 460" width="300" height="460" class="board-svg" id="boardSvg" role="img" aria-label="Pizarra táctica con la disposición de los jugadores en la cancha" focusable="false">
           <rect x="10" y="10" width="280" height="440" fill="none" stroke="#fff" stroke-width="3"/>
           <path d="M75 450 A100 100 0 0 0 225 450" fill="none" stroke="#fff" stroke-width="2"/>
           <rect x="100" y="10" width="100" height="150" fill="none" stroke="#fff" stroke-width="2"/>
@@ -522,7 +531,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
   </main>
 
   <!-- ======================= VISTA EXAMEN ======================= -->
-  <main class="view" id="view-examen">
+  <main class="view" id="view-examen" aria-label="Examen de autoevaluación" tabindex="-1">
     <div class="exam-card">
       <div class="card exam-start" id="examStart">
         <h2>🧪 Examen de Autoevaluación</h2>
@@ -541,7 +550,7 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
         <div class="exam-progress"><div class="exam-progress-fill" id="examProgressFill"></div></div>
         <h3 id="qText" style="margin-top:1rem;"></h3>
         <div id="qOptions"></div>
-        <div class="exam-feedback" id="qFeedback"></div>
+        <div class="exam-feedback" id="qFeedback" role="status" aria-live="polite"></div>
         <button class="btn-primary" id="nextBtn" disabled>Siguiente</button>
       </div>
 

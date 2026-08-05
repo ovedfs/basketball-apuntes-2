@@ -3,8 +3,9 @@
 ================================================================= */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.removeAttribute('aria-current');});
     btn.classList.add('active');
+    btn.setAttribute('aria-current','true');
     document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
     document.getElementById('view-'+btn.dataset.view).classList.add('active');
     window.scrollTo({top:0,behavior:'smooth'});
