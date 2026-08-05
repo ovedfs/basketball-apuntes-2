@@ -67,3 +67,13 @@ if('IntersectionObserver' in window){
   document.querySelectorAll('iframe[data-src]').forEach(lazyLoadVideo);
 }
 
+/* =================================================================
+   Registro del Service Worker (PWA / modo offline)
+================================================================= */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js')
+      .catch(err=>console.warn('Registro de Service Worker falló:',err));
+  });
+}
+

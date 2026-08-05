@@ -1,0 +1,19 @@
+{
+  "name": "BasquetPro · Compendio Interactivo de Baloncesto",
+  "short_name": "BasquetPro",
+  "description": "Plataforma de estudio de la metodología técnica del baloncesto: apuntes, flashcards, minijuegos y examen de autoevaluación.",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0D1B2A",
+  "theme_color": "#FF6F00",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
