@@ -572,9 +572,15 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
       <div class="card exam-start" id="examStart">
         <h2>🧪 Examen de Autoevaluación</h2>
         <p>El sistema seleccionará <strong>30 preguntas al azar</strong> de un banco de más de 150, basadas íntegramente en el compendio. Se muestra una pregunta a la vez, con retroalimentación inmediata.</p>
-        <label style="display:flex;align-items:center;gap:.5rem;font-weight:600;font-size:.88rem;margin:1rem 0;">
-          <input type="checkbox" id="timerToggle"> Activar temporizador de estudio (60s por pregunta)
-        </label>
+        <div style="margin:1rem 0;">
+          <label for="timerSelect" style="display:block;font-weight:600;font-size:.88rem;margin-bottom:.4rem;">Dificultad del temporizador por pregunta</label>
+          <select id="timerSelect" style="padding:.5rem .8rem;border-radius:8px;border:2px solid var(--azul-2);font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;background:#fff;">
+            <option value="0">Sin temporizador</option>
+            <option value="90">Fácil · 90s por pregunta</option>
+            <option value="60" selected>Normal · 60s por pregunta</option>
+            <option value="30">Difícil · 30s por pregunta</option>
+          </select>
+        </div>
         <button class="btn-primary" id="startExamBtn">Comenzar examen</button>
       </div>
 

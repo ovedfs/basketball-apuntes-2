@@ -1,13 +1,13 @@
 /* =================================================================
    EXAMEN - Variables globales e inicialización
 ================================================================= */
-let examQuestions = [], examIndex = 0, examAnswers = [], timerEnabled=false, qTimerInterval=null;
+let examQuestions = [], examIndex = 0, examAnswers = [], qSeconds=0, qTimerInterval=null;
 
 /* =================================================================
    FUNCIONES DEL EXAMEN
 ================================================================= */
 function startExam(){
-  timerEnabled = document.getElementById('timerToggle').checked;
+  qSeconds = parseInt(document.getElementById('timerSelect').value,10)||0;
   const pool = shuffleArr(QB);
   examQuestions = pool.slice(0,30);
   examIndex = 0;
@@ -35,8 +35,8 @@ function renderQuestion(){
   document.getElementById('qFeedback').style.display='none';
   document.getElementById('nextBtn').disabled = true;
   const timerEl = document.getElementById('qTimer');
-  if(timerEnabled){
-    let t=60; timerEl.textContent = '⏱ '+t+'s';
+  if(qSeconds>0){
+    let t=qSeconds; timerEl.textContent = '⏱ '+t+'s';
     qTimerInterval = setInterval(()=>{
       t--; timerEl.textContent='⏱ '+t+'s';
       if(t<=0){ clearInterval(qTimerInterval); if(examAnswers[examIndex]===null) answerQuestion(-1); }
