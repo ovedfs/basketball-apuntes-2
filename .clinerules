@@ -1,0 +1,49 @@
+# .clinerules — Contexto del Proyecto
+
+## Proyecto
+- **Nombre**: BasquetPro · Compendio Interactivo de Baloncesto
+- **Archivo principal**: `index.html` (monolítico, SPA)
+- **Stack**: HTML5 + CSS3 + Vanilla JS (sin frameworks ni bundlers)
+- **Fuentes externas**: Google Fonts (Poppins + Inter) — sin otras dependencias JS
+- **Contenido**: 10 módodos educativos + flashcards + minigames + examen
+
+## Convenciones de código
+- Todo el CSS usa variables CSS personalizadas (--naranja, --azul, --fondo, etc.)
+- Los IDs y clases usan kebab-case
+- JavaScript usa camelCase para variables y funciones
+- Los commits usan Conventional Commits: `tipo: descripción`
+  - `feat:` — nueva funcionalidad
+  - `refactor:` — cambio de estructura sin cambiar comportamiento
+  - `a11y:` — mejora de accesibilidad
+  - `perf:` — mejora de rendimiento
+  - `fix:` — corrección
+  - `chore:` — tareas de infraestructura
+
+## Flujo de trabajo
+1. ANTES de cada tarea, leer este archivo + `PLAN.md`
+2. Hacer la mejora en el código
+3. **PROBAR LOCALMENTE**: abrir `index.html` en navegador y verificar que:
+   - No hay errores en la consola (F12)
+   - La funcionalidad principal sigue funcionando (apuntes, flashcards, juegos, examen)
+   - La UI se ve correcta
+4. Hacer commit
+5. Hacer push a `main` (Netlify despliega automáticamente)
+
+## Estructura final del proyecto (meta)
+```
+/
+├── index.html          # App principal
+├── css/
+│   └── style.css       # (opcional, extraído de <style>)
+├── js/
+│   ├── app.js          # Inicialización, tabs, scrollspy, sidebar
+│   ├── questions.js    # Banco de preguntas (QB)
+│   ├── flashcards.js   # Lógica de flashcards
+│   ├── games.js        # Minijuegos (matching, pizarra táctica)
+│   └── exam.js         # Sistema de examen
+├── sw.js               # Service Worker (PWA)
+├── manifest.json       # PWA manifest
+├── favicon.ico         # (opcional)
+├── .clinerules         # Este archivo
+└── PLAN.md             # Roadmap de mejoras
+```

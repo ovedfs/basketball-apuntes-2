@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodología Técnica de Basquetbol · Plataforma de Estudio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --naranja:#FF6F00;
+  --naranja-2:#E65100;
+  --azul:#0D1B2A;
+  --azul-2:#1B2A4A;
+  --fondo:#F8F9FA;
+  --verde:#1E8E5A;
+  --rojo:#C62828;
+  --amber:#B7791F;
+  --amber-bg:#FFF3E0;
+  --card:#FFFFFF;
+  --radius:12px;
+  --shadow:0 4px 14px rgba(13,27,42,0.08);
+  --shadow-lg:0 10px 30px rgba(13,27,42,0.14);
+  font-family:'Inter',sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--fondo);color:var(--azul);line-height:1.55;}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif;color:var(--azul);margin:0 0 .5em;}
+p{margin:0 0 1em;}
+a{color:var(--naranja-2);}
+img,svg{max-width:100%;}
+button{font-family:'Inter',sans-serif;cursor:pointer;}
+
+/* ===== Progreso de lectura ===== */
+#readbar{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--naranja-2),var(--naranja));width:0%;z-index:999;transition:width .1s linear;}
+
+/* ===== Topbar ===== */
+.topbar{position:sticky;top:0;z-index:200;background:var(--azul);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.2rem;box-shadow:var(--shadow-lg);flex-wrap:wrap;gap:.5rem;}
+.brand{display:flex;align-items:center;gap:.6rem;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.5px;}
+.brand .ball{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 35% 30%, var(--naranja) 0 45%, var(--naranja-2) 46% 100%);position:relative;box-shadow:inset -3px -3px 6px rgba(0,0,0,.35);}
+.brand .ball::before,.brand .ball::after{content:"";position:absolute;background:#1B2A4A;}
+.brand .ball::before{top:0;bottom:0;left:50%;width:2px;transform:translateX(-1px);}
+.brand .ball::after{left:0;right:0;top:50%;height:2px;transform:translateY(-1px);}
+.tabs{display:flex;gap:.4rem;background:rgba(255,255,255,.08);padding:.3rem;border-radius:999px;flex-wrap:wrap;}
+.tab-btn{border:none;background:transparent;color:#cfd8e3;padding:.5rem 1rem;border-radius:999px;font-weight:600;font-size:.88rem;transition:.2s;}
+.tab-btn.active{background:var(--naranja);color:#fff;box-shadow:0 2px 8px rgba(255,111,0,.5);}
+.tab-btn:hover{color:#fff;}
+
+/* ===== Layout ===== */
+.app-shell{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start;}
+.sidebar{position:sticky;top:64px;width:250px;flex-shrink:0;padding:1.2rem .8rem;max-height:calc(100vh - 64px);overflow-y:auto;}
+.sidebar h4{font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--naranja-2);margin-bottom:.8rem;}
+.side-link{display:flex;align-items:center;gap:.6rem;padding:.5rem .6rem;border-radius:10px;text-decoration:none;color:var(--azul-2);font-weight:600;font-size:.85rem;margin-bottom:.15rem;transition:.15s;}
+.side-link:hover{background:#fff;}
+.side-link.active{background:var(--azul);color:#fff;box-shadow:var(--shadow);}
+.jersey{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:var(--fondo);color:var(--naranja-2);font-family:'Poppins',sans-serif;font-weight:800;font-size:.78rem;flex-shrink:0;border:2px solid var(--naranja-2);}
+.side-link.active .jersey{background:var(--naranja);color:#fff;border-color:var(--naranja);}
+main.view{flex:1;min-width:0;padding:1.4rem 1.6rem 4rem;}
+main.view:not(.active){display:none;}
+
+/* ===== Hero ===== */
+.hero{background:linear-gradient(135deg,var(--azul) 0%,var(--azul-2) 100%);color:#fff;border-radius:20px;padding:2.4rem;display:flex;align-items:center;gap:2rem;margin-bottom:2rem;flex-wrap:wrap;overflow:hidden;position:relative;}
+.hero-text{flex:1;min-width:260px;}
+.hero-text h1{color:#fff;font-size:1.9rem;margin-bottom:.4rem;}
+.hero-text p{color:#c9d3e0;max-width:480px;}
+.hero-badge{display:inline-block;background:var(--naranja);color:#fff;font-weight:700;font-size:.72rem;letter-spacing:1px;padding:.3rem .7rem;border-radius:999px;margin-bottom:.8rem;text-transform:uppercase;}
+.hoop-wrap{width:190px;height:190px;flex-shrink:0;position:relative;}
+@keyframes swish{0%{transform:translate(0,-40px) scale(.4);opacity:0;}40%{opacity:1;}100%{transform:translate(0,60px) scale(1);opacity:0;}}
+.ball-anim{position:absolute;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 30%, var(--naranja) 0 45%, var(--naranja-2) 46% 100%);left:82px;top:0;animation:swish 1.8s ease-in infinite;}
+
+/* ===== Cards & content ===== */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.4rem 1.6rem;margin-bottom:1.4rem;}
+.module-section{padding-top:1rem;scroll-margin-top:70px;}
+.module-head{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+.module-num{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.6rem;color:#fff;background:var(--naranja);width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(255,111,0,.4);flex-shrink:0;}
+.tip{background:var(--amber-bg);border-left:5px solid var(--amber);border-radius:10px;padding:.9rem 1.1rem;margin:1rem 0;font-size:.92rem;}
+.tip strong{color:var(--amber);}
+.tip.success{background:#E8F5E9;border-color:var(--verde);}
+.tip.success strong{color:var(--verde);}
+table{width:100%;border-collapse:collapse;font-size:.9rem;}
+.table-wrap{overflow-x:auto;margin:1rem 0;}
+th,td{padding:.55rem .7rem;border-bottom:1px solid #E8EAED;text-align:left;}
+th{background:var(--azul);color:#fff;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;}
+tr:nth-child(even){background:#FAFAFB;}
+ul.list, ol.list{padding-left:1.3rem;}
+ul.list li, ol.list li{margin-bottom:.35rem;}
+.video-wrap{position:relative;width:100%;padding-top:56.25%;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin:1rem 0;}
+.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;}
+@media(max-width:800px){.grid2,.grid3{grid-template-columns:1fr;}}
+.pill{display:inline-block;background:var(--azul);color:#fff;font-size:.7rem;font-weight:700;padding:.25rem .6rem;border-radius:999px;margin-bottom:.6rem;letter-spacing:.5px;}
+.steps5{display:flex;gap:.7rem;flex-wrap:wrap;margin:1rem 0;}
+.step5{flex:1;min-width:130px;background:var(--fondo);border-radius:10px;padding:.9rem;text-align:center;border:2px solid #E8EAED;position:relative;}
+.step5 .n{font-family:'Poppins',sans-serif;font-weight:800;color:var(--naranja-2);font-size:1.3rem;}
+.step5:not(:last-child)::after{content:"→";position:absolute;right:-18px;top:50%;transform:translateY(-50%);color:var(--naranja-2);font-weight:800;font-size:1.1rem;}
+@media(max-width:800px){.step5:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-16px;}}
+
+/* ===== Flashcards ===== */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;}
+.fc{height:170px;perspective:1000px;}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;cursor:pointer;}
+.fc.flipped .fc-inner{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;padding:1rem;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.88rem;box-shadow:var(--shadow);}
+.fc-front{background:var(--azul);color:#fff;font-weight:600;}
+.fc-back{background:var(--naranja);color:#fff;transform:rotateY(180deg);font-weight:500;}
+.fc-hint{position:absolute;bottom:6px;right:10px;font-size:.65rem;opacity:.6;}
+
+/* ===== Juegos ===== */
+.subtabs{display:flex;gap:.5rem;margin-bottom:1.2rem;}
+.subtab-btn{border:2px solid var(--azul);background:#fff;color:var(--azul);padding:.5rem 1.1rem;border-radius:10px;font-weight:700;font-size:.85rem;}
+.subtab-btn.active{background:var(--azul);color:#fff;}
+.game-panel:not(.active){display:none;}
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:700px){.match-cols{grid-template-columns:1fr;}}
+.match-item{background:#fff;border:2px solid #E8EAED;border-radius:10px;padding:.7rem .9rem;margin-bottom:.6rem;font-size:.87rem;font-weight:600;transition:.15s;}
+.match-item:hover{border-color:var(--naranja);}
+.match-item.selected{border-color:var(--naranja);background:#FFF3E0;}
+.match-item.matched{background:#E8F5E9;border-color:var(--verde);color:var(--verde);cursor:default;}
+.match-item.wrong{background:#FDECEA;border-color:var(--rojo);}
+.match-status{font-weight:700;margin-bottom:.8rem;}
+.board-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+.board-controls button{border:2px solid var(--azul-2);background:#fff;color:var(--azul-2);padding:.5rem 1rem;border-radius:8px;font-weight:700;font-size:.82rem;}
+.board-controls button.active{background:var(--azul-2);color:#fff;}
+.board-wrap{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;}
+.board-svg{background:#2E7D32;border-radius:12px;box-shadow:var(--shadow-lg);flex-shrink:0;}
+.board-desc{flex:1;min-width:220px;}
+.dot{transition:cx .6s ease, cy .6s ease;}
+
+/* ===== Examen ===== */
+.exam-card{max-width:720px;margin:0 auto;}
+.exam-progress{height:8px;background:#E8EAED;border-radius:999px;overflow:hidden;margin-bottom:1rem;}
+.exam-progress-fill{height:100%;background:linear-gradient(90deg,var(--naranja-2),var(--naranja));width:0%;transition:width .3s;}
+.opt-btn{display:block;width:100%;text-align:left;background:#fff;border:2px solid #E8EAED;border-radius:10px;padding:.75rem 1rem;margin-bottom:.6rem;font-size:.92rem;font-weight:600;color:var(--azul);}
+.opt-btn:hover:not(:disabled){border-color:var(--naranja);}
+.opt-btn.correct{background:#E8F5E9;border-color:var(--verde);color:var(--verde);}
+.opt-btn.incorrect{background:#FDECEA;border-color:var(--rojo);color:var(--rojo);}
+.opt-btn:disabled{cursor:default;}
+.btn-primary{background:var(--naranja);color:#fff;border:none;border-radius:10px;padding:.7rem 1.6rem;font-weight:700;font-size:.9rem;box-shadow:0 4px 10px rgba(255,111,0,.4);}
+.btn-primary:disabled{background:#ccc;box-shadow:none;cursor:not-allowed;}
+.btn-secondary{background:#fff;color:var(--azul);border:2px solid var(--azul);border-radius:10px;padding:.7rem 1.4rem;font-weight:700;font-size:.9rem;}
+.exam-feedback{background:var(--amber-bg);border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.87rem;display:none;}
+.exam-timer{font-family:'Poppins',sans-serif;font-weight:700;color:var(--naranja-2);}
+.score-ring{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-family:'Poppins',sans-serif;font-weight:800;font-size:1.8rem;color:#fff;position:relative;}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;text-align:center;margin:1.2rem 0;}
+.result-box{border-radius:10px;padding:1rem;font-weight:700;}
+.result-box.ok{background:#E8F5E9;color:var(--verde);}
+.result-box.bad{background:#FDECEA;color:var(--rojo);}
+.result-box .big{font-size:1.8rem;display:block;}
+.report-row{border-bottom:1px solid #E8EAED;padding:.7rem 0;font-size:.85rem;}
+.report-row.wrong{background:#FDECEA;}
+.tag-ok{color:var(--verde);font-weight:700;}
+.tag-bad{color:var(--rojo);font-weight:700;}
+
+footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
+
+/* ===== Impresión ===== */
+@media print{
+  .topbar,.sidebar,#readbar,.subtabs,.tabs,.board-controls,.exam-start,.no-print,#examQuizScreen{display:none !important;}
+  main.view{display:block !important;padding:0;}
+  body{background:#fff;}
+  .card{box-shadow:none;border:1px solid #ccc;}
+}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .app-shell{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div id="readbar"></div>
+
+<header class="topbar">
+  <div class="brand"><span class="ball"></span> BasquetPro · Compendio Interactivo</div>
+  <nav class="tabs" id="mainTabs">
+    <button class="tab-btn active" data-view="apuntes">📘 Apuntes</button>
+    <button class="tab-btn" data-view="flashcards">🃏 Flashcards</button>
+    <button class="tab-btn" data-view="juegos">🎮 Mini-Juegos</button>
+    <button class="tab-btn" data-view="examen">🧪 Examen</button>
+  </nav>
+</header>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <h4>Índice general</h4>
+    <a class="side-link" data-target="m1" href="#m1"><span class="jersey">01</span>Génesis y Evolución</a>
+    <a class="side-link" data-target="m2" href="#m2"><span class="jersey">02</span>Terreno y Equipo</a>
+    <a class="side-link" data-target="m3" href="#m3"><span class="jersey">03</span>Arbitraje</a>
+    <a class="side-link" data-target="m4" href="#m4"><span class="jersey">04</span>Fundamentos Técnicos</a>
+    <a class="side-link" data-target="m5" href="#m5"><span class="jersey">05</span>Táctica y Estrategia</a>
+    <a class="side-link" data-target="m6" href="#m6"><span class="jersey">06</span>Planificación</a>
+    <a class="side-link" data-target="m7" href="#m7"><span class="jersey">07</span>Detección de Talento</a>
+    <a class="side-link" data-target="m8" href="#m8"><span class="jersey">08</span>Capacidades Físicas/Cognitivas</a>
+    <a class="side-link" data-target="m9" href="#m9"><span class="jersey">09</span>Lesiones Deportivas</a>
+    <a class="side-link" data-target="m10" href="#m10"><span class="jersey">10</span>Tecnología y Organismos</a>
+  </aside>
+
+  <!-- ======================= VISTA APUNTES ======================= -->
+  <main class="view active" id="view-apuntes">
+    <div class="hero">
+      <div class="hero-text">
+        <span class="hero-badge">Licenciatura en Cultura Física y Deportes</span>
+        <h1>Metodología Técnica de Basquetbol</h1>
+        <p>Compendio integral para el estudio de alto rendimiento: historia, reglamento, técnica, táctica, planificación, ciencia del entrenamiento y organización institucional del baloncesto.</p>
+      </div>
+      <div class="hoop-wrap">
+        <svg viewBox="0 0 190 190" width="190" height="190">
+          <rect x="70" y="10" width="60" height="42" rx="3" fill="#fff" opacity=".85"/>
+          <rect x="70" y="10" width="60" height="42" rx="3" fill="none" stroke="#0D1B2A" stroke-width="3"/>
+          <ellipse cx="100" cy="58" rx="26" ry="7" fill="none" stroke="#FF6F00" stroke-width="4"/>
+          <path d="M78 60 L74 100 M122 60 L126 100 M90 60 L88 98 M110 60 L112 98 M100 60 L100 100" stroke="#fff" stroke-width="1.4" opacity=".8"/>
+        </svg>
+        <div class="ball-anim"></div>
+      </div>
+    </div>
+
+    <!-- MODULO 1 -->
+    <section class="module-section" id="m1">
+      <div class="module-head"><div class="module-num">01</div><h2>Génesis y Evolución: El Desarrollo Histórico</h2></div>
+      <div class="card">
+        <p>El baloncesto nació en <strong>diciembre de 1891</strong> en el Springfield College (Massachusetts). Su creador, el <strong>Dr. James Naismith</strong>, profesor canadiense de Educación Física, buscaba una alternativa de bajo impacto para practicar en ambiente cerrado durante el crudo invierno de Nueva Inglaterra.</p>
+        <div class="grid3">
+          <div class="tip"><strong>Rugby americano</strong><br>Inspiró la mecánica de los pases.</div>
+          <div class="tip"><strong>Rugby inglés</strong><br>Inspiró los saltos.</div>
+          <div class="tip"><strong>"Pato en la roca"</strong><br>Inspiró la puntería a un objetivo elevado.</div>
+        </div>
+        <p>La propuesta inicial de nombre fue <em>"Juego Naismith"</em>, pero finalmente prevaleció el término <strong>Baloncesto</strong>.</p>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Año</th><th>Hito</th></tr>
+            <tr><td>1893</td><td>Primer partido internacional, en Montmartre, París</td></tr>
+            <tr><td>1898</td><td>Fundación de la NBL, primera liga profesional</td></tr>
+            <tr><td>1932</td><td>Fundación de la FIBA, en Suiza</td></tr>
+            <tr><td>1936</td><td>Debut olímpico masculino, Berlín</td></tr>
+            <tr><td>1976</td><td>Debut olímpico femenino, Montreal</td></tr>
+          </table>
+        </div>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/zpvpxIe1gO0" title="13 reglas de Naismith" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <h3>Las 13 Reglas Originales de Naismith (1891)</h3>
+        <ol class="list">
+          <li>El balón puede lanzarse en cualquier dirección con una o ambas manos.</li>
+          <li>El balón puede golpearse en cualquier dirección (nunca con el puño).</li>
+          <li>No se puede correr con el balón: se lanza desde donde se captura.</li>
+          <li>El balón se sujeta solo con las manos.</li>
+          <li>Prohibido cargar, agarrar, empujar o zancadillear.</li>
+          <li>Golpear con el puño es falta.</li>
+          <li>Tres faltas consecutivas otorgan una canasta al rival.</li>
+          <li>La canasta es válida si el balón entra y permanece en el cesto.</li>
+          <li>El balón fuera de banda lo devuelve quien lo toque primero.</li>
+          <li>El "Umpire" juzga a los jugadores y anota las faltas.</li>
+          <li>El "Referee" juzga el balón, el tiempo y la posesión.</li>
+          <li>Se juegan dos mitades de 15 minutos con 5 de descanso.</li>
+          <li>Gana el equipo con más canastas.</li>
+        </ol>
+        <div class="tip success"><strong>Tip del Entrenador:</strong> Conocer el origen del reglamento ayuda a entender por qué reglas modernas (como el límite de faltas) siguen la lógica original de Naismith.</div>
+      </div>
+    </section>
+
+    <!-- MODULO 2 -->
+    <section class="module-section" id="m2">
+      <div class="module-head"><div class="module-num">02</div><h2>Especificaciones del Terreno de Juego y Equipamiento Técnico</h2></div>
+      <div class="card">
+        <div class="grid2">
+          <div>
+            <svg viewBox="0 0 560 300" class="board-svg" style="width:100%;background:#B26A00;">
+              <rect x="10" y="10" width="540" height="280" fill="none" stroke="#fff" stroke-width="3"/>
+              <line x1="280" y1="10" x2="280" y2="290" stroke="#fff" stroke-width="2"/>
+              <circle cx="280" cy="150" r="36" fill="none" stroke="#fff" stroke-width="2"/>
+              <rect x="10" y="90" width="95" height="120" fill="none" stroke="#fff" stroke-width="2"/>
+              <rect x="455" y="90" width="95" height="120" fill="none" stroke="#fff" stroke-width="2"/>
+              <path d="M35 90 A25 25 0 0 1 35 210" fill="none" stroke="#fff" stroke-width="2"/>
+              <path d="M525 90 A25 25 0 0 0 525 210" fill="none" stroke="#fff" stroke-width="2"/>
+              <text x="280" y="24" fill="#fff" font-size="13" text-anchor="middle" font-family="Poppins">28 m × 15 m (FIBA)</text>
+              <text x="280" y="145" fill="#fff" font-size="10" text-anchor="middle">Ø 3.6 m</text>
+              <text x="35" y="155" fill="#fff" font-size="9" text-anchor="middle">r 1.25 m</text>
+              <text x="525" y="155" fill="#fff" font-size="9" text-anchor="middle">r 1.25 m</text>
+            </svg>
+          </div>
+          <div>
+            <p><strong>Cancha oficial FIBA:</strong> 28 m de largo × 15 m de ancho. Círculo central: 3.6 m de diámetro. Semicírculo de no carga bajo la canasta: 1.25 m de radio.</p>
+            <p><strong>Tablero:</strong> 1.05 × 1.80 m, grosor mínimo de 30 mm, anclado firmemente al suelo.</p>
+            <p><strong>Aro:</strong> altura reglamentaria de 3.05 m, ubicado a 1.20 m dentro del campo desde la línea de fondo.</p>
+            <div class="tip"><strong>Tip del Entrenador:</strong> El balón oficial tiene 9,366 puntos de agarre. Al caer desde 1.80 m debe rebotar entre 1.20 y 1.40 m para considerarse reglamentario.</div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Categoría</th><th>Uso</th><th>Circunferencia</th><th>Peso</th></tr>
+            <tr><td>#7</td><td>Varonil</td><td>74–76 cm</td><td>567–610 g</td></tr>
+            <tr><td>#6</td><td>Femenil</td><td>72–73 cm</td><td>510–567 g</td></tr>
+            <tr><td>#5</td><td>Infantil</td><td>69–70 cm</td><td>470–510 g</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULO 3 -->
+    <section class="module-section" id="m3">
+      <div class="module-head"><div class="module-num">03</div><h2>Arbitraje y Señalización Técnica</h2></div>
+      <div class="card">
+        <p>El desarrollo del partido está controlado por el árbitro principal y sus auxiliares, quienes usan señales manuales estandarizadas para comunicar sus decisiones.</p>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Señal</th><th>Significado</th></tr>
+            <tr><td>Dedos hacia abajo (1 o 2)</td><td>Puntos anotados en tiro de campo</td></tr>
+            <tr><td>3 dedos levantados</td><td>Intento de tiro de 3 puntos</td></tr>
+            <tr><td>Dos manos arriba</td><td>Triple convertido</td></tr>
+            <tr><td>Palma abierta</td><td>Detener el reloj</td></tr>
+            <tr><td>Puño cerrado</td><td>Falta cometida</td></tr>
+            <tr><td>Corte con la mano</td><td>Reanudar el reloj</td></tr>
+            <tr><td>"T" con las manos</td><td>Falta técnica</td></tr>
+            <tr><td>Manos en la cintura</td><td>Bloqueo</td></tr>
+            <tr><td>Sujetar la muñeca sobre la cabeza</td><td>Falta antideportiva</td></tr>
+          </table>
+        </div>
+        <div class="tip"><strong>Tip del Entrenador:</strong> Aprender la señalización arbitral de memoria acelera la lectura del juego en tiempo real, tanto para jugadores como para cuerpos técnicos.</div>
+      </div>
+    </section>
+
+    <!-- MODULO 4 -->
+    <section class="module-section" id="m4">
+      <div class="module-head"><div class="module-num">04</div><h2>Fundamentos Técnicos Individuales: La Trilogía Técnica</h2></div>
+      <div class="card">
+        <h3>Postura Defensiva Obligatoria</h3>
+        <p>Rodillas flexionadas, cadera baja, espalda recta, pies al ancho de hombros, palmas arriba a la altura de la cintura, cabeza alta y centrada para favorecer la visión periférica y el equilibrio.</p>
+        <div class="grid3">
+          <div class="card" style="margin:0;box-shadow:none;border:2px solid #E8EAED;">
+            <span class="pill">El Bote</span>
+            <ul class="list">
+              <li><strong>Protección:</strong> bajo presión defensiva.</li>
+              <li><strong>Control:</strong> avance sin oposición.</li>
+              <li><strong>Alejamiento:</strong> crear espacio o evitar un 2×1.</li>
+            </ul>
+          </div>
+          <div class="card" style="margin:0;box-shadow:none;border:2px solid #E8EAED;">
+            <span class="pill">El Pase</span>
+            <ul class="list">
+              <li>Pecho, Picado, Elevado</li>
+              <li>Al toque, Béisbol</li>
+              <li>Saltando, Por la espalda, Ciego</li>
+            </ul>
+          </div>
+          <div class="card" style="margin:0;box-shadow:none;border:2px solid #E8EAED;">
+            <span class="pill">El Tiro</span>
+            <ul class="list">
+              <li>Libre, Campo, Suspensión</li>
+              <li>Gancho, Bandeja</li>
+              <li>Mate, Aro pasado</li>
+            </ul>
+          </div>
+        </div>
+        <h3>Ciencia del Rebote: 5 Pasos</h3>
+        <div class="steps5">
+          <div class="step5"><div class="n">1</div>Brazos elevados</div>
+          <div class="step5"><div class="n">2</div>Salto vertical</div>
+          <div class="step5"><div class="n">3</div>Toma en el punto más alto</div>
+          <div class="step5"><div class="n">4</div>Aseguramiento con ambas manos</div>
+          <div class="step5"><div class="n">5</div>Protección al bajar (codos fuera)</div>
+        </div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/CavmjNv0tbs" title="Mecánica de tiro" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/P1GLDcDFxq0" title="Técnicas de dribbling" allowfullscreen loading="lazy"></iframe></div>
+      </div>
+    </section>
+
+    <!-- MODULO 5 -->
+    <section class="module-section" id="m5">
+      <div class="module-head"><div class="module-num">05</div><h2>Táctica y Estrategia: Organización Espacial y Sentido Táctico</h2></div>
+      <div class="card">
+        <p><strong>Matveiev (1986):</strong> el sentido táctico es la aptitud de identificar situaciones, prever acciones y escoger soluciones.</p>
+        <p><strong>Bauer y Ueberle (1988)</strong> describen 5 tipos de interacciones: táctica individual, colectiva, de equipo, situaciones estándar y práctica del día del partido.</p>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Componente</th><th>Definición</th><th>Ejemplo</th></tr>
+            <tr><td>Técnica</td><td>Ejecución de movimientos estructurales basados en patrones espaciales modelo</td><td>Mecánica de tiro, drible</td></tr>
+            <tr><td>Táctica</td><td>Conjuga facultades físicas, técnicas y psicológicas para una solución inmediata ante oponentes</td><td>Tiro con oposición, amagar pivote</td></tr>
+            <tr><td>Estrategia</td><td>Plan de acción a largo plazo para superar al oponente</td><td>Selección de deportistas, sistemas de juego</td></tr>
+          </table>
+        </div>
+        <h3>Modelos Tácticos Ofensivos</h3>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Modelo</th><th>Descripción</th><th>Zona de impacto</th></tr>
+            <tr><td>Overload (Sobrecarga)</td><td>3 jugadores en un mismo sector</td><td>Lateral y esquina</td></tr>
+            <tr><td>High-Low (Poste Alto)</td><td>El interior distribuye desde la bombilla</td><td>Centro de la zona y tiros libres</td></tr>
+            <tr><td>Ball Reversal</td><td>Circulación rápida sin bote excesivo</td><td>Línea de 3 puntos (45°) y perímetro</td></tr>
+          </table>
+        </div>
+        <p><strong>Defensa del Poste Bajo:</strong> "tres cuartos" (cortar la línea de pase con pie y mano, de cara a línea de fondo) o defender con balón (colocarse entre el jugador y la canasta, antebrazo horizontal, puño cerrado).</p>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/nUyocLPwT-Q" title="Tácticas ofensivas y defensivas" allowfullscreen loading="lazy"></iframe></div>
+        <div class="tip"><strong>Tip del Entrenador:</strong> Explora el visualizador de la Pizarra Táctica en la sección de Mini-Juegos para ver estas formaciones en movimiento.</div>
+      </div>
+    </section>
+
+    <!-- MODULO 6 -->
+    <section class="module-section" id="m6">
+      <div class="module-head"><div class="module-num">06</div><h2>Planificación y Estructura del Entrenamiento</h2></div>
+      <div class="card">
+        <p>El ciclo de entrenamiento se organiza en 6 etapas secuenciales:</p>
+        <div class="steps5">
+          <div class="step5"><div class="n">1</div>Análisis del estado del atleta</div>
+          <div class="step5"><div class="n">2</div>Definición de objetivos</div>
+          <div class="step5"><div class="n">3</div>Selección de ejercicios</div>
+          <div class="step5"><div class="n">4</div>Estructuración de sesiones</div>
+          <div class="step5"><div class="n">5</div>Planificación de descansos</div>
+          <div class="step5"><div class="n">6</div>Evaluación de resultados</div>
+        </div>
+        <div class="tip success"><strong>Tip del Entrenador:</strong> La evaluación de resultados no es el final del proceso, sino el punto de partida de un nuevo ciclo de mejora continua.</div>
+      </div>
+    </section>
+
+    <!-- MODULO 7 -->
+    <section class="module-section" id="m7">
+      <div class="module-head"><div class="module-num">07</div><h2>Detección de Talento y Bio-Banding</h2></div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <tr><th>Fase Sensible</th><th>Edad</th><th>Categorías</th><th>Características</th></tr>
+            <tr><td>Iniciación</td><td>6–9 años</td><td>Micro e Infantil</td><td>100% lúdico, agilidad, coordinación ojo-mano</td></tr>
+            <tr><td>Detección Activa</td><td>10–13 años</td><td>Pasarela y Cadete</td><td>Evaluaciones estructuradas, predicción de estatura, capacidad nerviosa técnica</td></tr>
+            <tr><td>Especialización</td><td>14–17 años</td><td>Juvenil y Juvenil Mayor</td><td>Alto rendimiento, adaptación post-estirón puberal</td></tr>
+          </table>
+        </div>
+        <p><strong>Bio-Banding:</strong> agrupación por maduración física real en lugar de edad cronológica, para evitar excluir a los "maduradores tardíos".</p>
+        <div class="video-wrap"><iframe src="https://www.youtube.com/embed/bngpWRb-FdQ" title="Detección y formación de talento deportivo" allowfullscreen loading="lazy"></iframe></div>
+      </div>
+    </section>
+
+    <!-- MODULO 8 -->
+    <section class="module-section" id="m8">
+      <div class="module-head"><div class="module-num">08</div><h2>Capacidades Físicas y Dimensión Cognitiva</h2></div>
+      <div class="card">
+        <div class="tip"><strong>Dr. Burkhart:</strong> "Los ojos tienen que mirar y el cerebro tiene que tomar la decisión antes de que el cuerpo ejecute esa acción."</div>
+        <p>El entrenamiento visual cercano y lejano permite procesar detalles en milisegundos, mejorando la toma de decisiones del jugador durante el juego. La dimensión cognitiva complementa a las capacidades físicas (fuerza, velocidad, resistencia, coordinación) integrando la secuencia <strong>visión → decisión → acción</strong>.</p>
+      </div>
+    </section>
+
+    <!-- MODULO 9 -->
+    <section class="module-section" id="m9">
+      <div class="module-head"><div class="module-num">09</div><h2>Lesiones Deportivas en el Baloncesto</h2></div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <tr><th>Tipo</th><th>Detalle</th></tr>
+            <tr><td>Fracturas</td><td>Agudas o por estrés</td></tr>
+            <tr><td>Esguinces Grado I</td><td>Distensión ligamentosa</td></tr>
+            <tr><td>Esguinces Grado II</td><td>Ruptura parcial</td></tr>
+            <tr><td>Esguinces Grado III</td><td>Ruptura total</td></tr>
+            <tr><td>Desgarros / Distensiones</td><td>Lesión muscular</td></tr>
+            <tr><td>Tendinitis</td><td>Ej. tendinitis de Aquiles</td></tr>
+          </table>
+        </div>
+        <div class="grid2">
+          <div class="tip" style="background:#FDECEA;border-color:var(--rojo);"><strong style="color:var(--rojo)">Lesión Aguda:</strong> dolor intenso y repentino, moretones/hinchazón extrema, incapacidad de mover la articulación, debilidad extrema, hueso o articulación fuera de lugar.</div>
+          <div class="tip"><strong>Lesión Crónica (uso excesivo):</strong> dolor persistente durante el juego, hinchazón y dolor leve constante en reposo.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULO 10 -->
+    <section class="module-section" id="m10">
+      <div class="module-head"><div class="module-num">10</div><h2>Seguimiento Tecnológico y Organizaciones</h2></div>
+      <div class="card">
+        <p><strong>Seguimiento tecnológico:</strong> datos en tiempo real (GPS, sensores) para optimizar la mecánica de tiro. <strong>Seguimiento estadístico:</strong> indicadores de rendimiento (eficiencia, % de tiro).</p>
+        <p><strong>FIBA</strong> se organiza en 5 confederaciones: África, Américas, Asia, Europa y Oceanía.</p>
+        <p><strong>ADEMEBA</strong> es el rector nacional del baloncesto en México, vinculado a CONADE y al COM, y opera desde niveles Micro hasta Sub-21.</p>
+        <div class="tip success"><strong>Tip del Entrenador:</strong> Comprender el marco organizacional ayuda a ubicar la trayectoria formativa de un deportista, desde el club local hasta la federación internacional.</div>
+      </div>
+    </section>
+
+    <footer>Compendio Integral de Metodología Técnica de Basquetbol · Facultad de Ciencias de la Actividad Física y el Deporte</footer>
+  </main>
+
+  <!-- ======================= VISTA FLASHCARDS ======================= -->
+  <main class="view" id="view-flashcards">
+    <div class="card"><h2>🃏 Flashcards de Memoria</h2><p>Haz clic en cada tarjeta para girarla y ver la respuesta. Repite hasta memorizar todos los conceptos.</p></div>
+    <div class="fc-grid" id="fcGrid"></div>
+  </main>
+
+  <!-- ======================= VISTA MINI-JUEGOS ======================= -->
+  <main class="view" id="view-juegos">
+    <div class="card"><h2>🎮 Mini-Juegos Educativos</h2></div>
+    <div class="subtabs">
+      <button class="subtab-btn active" data-panel="panel-match">Juego de Emparejamiento</button>
+      <button class="subtab-btn" data-panel="panel-board">Pizarra Táctica Interactiva</button>
+    </div>
+
+    <div class="game-panel active card" id="panel-match">
+      <p>Selecciona un concepto y luego su definición correcta. Si aciertan, quedarán marcados en verde.</p>
+      <div class="match-status" id="matchStatus">Emparejadas: 0 / 12</div>
+      <div class="match-cols">
+        <div id="matchTerms"></div>
+        <div id="matchDefs"></div>
+      </div>
+      <button class="btn-secondary" id="matchReset" style="margin-top:1rem;">🔄 Reiniciar juego</button>
+    </div>
+
+    <div class="game-panel card" id="panel-board">
+      <p>Alterna entre los distintos sistemas tácticos para visualizar la disposición de los jugadores en la cancha.</p>
+      <div class="board-controls" id="boardControls">
+        <button data-f="overload" class="active">Overload</button>
+        <button data-f="highlow">High-Low</button>
+        <button data-f="ballreversal">Ball Reversal</button>
+        <button data-f="zona">Defensa Zonal 2-3</button>
+      </div>
+      <div class="board-wrap">
+        <svg viewBox="0 0 300 460" width="300" height="460" class="board-svg" id="boardSvg">
+          <rect x="10" y="10" width="280" height="440" fill="none" stroke="#fff" stroke-width="3"/>
+          <path d="M75 450 A100 100 0 0 0 225 450" fill="none" stroke="#fff" stroke-width="2"/>
+          <rect x="100" y="10" width="100" height="150" fill="none" stroke="#fff" stroke-width="2"/>
+          <circle cx="150" cy="60" r="5" fill="#fff"/>
+          <g id="dots"></g>
+        </svg>
+        <div class="board-desc">
+          <h3 id="boardTitle">Overload (Sobrecarga)</h3>
+          <p id="boardDesc">3 jugadores se concentran en un mismo lateral para generar superioridad numérica frente a la defensa. Zona de impacto: lateral y esquina.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ======================= VISTA EXAMEN ======================= -->
+  <main class="view" id="view-examen">
+    <div class="exam-card">
+      <div class="card exam-start" id="examStart">
+        <h2>🧪 Examen de Autoevaluación</h2>
+        <p>El sistema seleccionará <strong>30 preguntas al azar</strong> de un banco de más de 150, basadas íntegramente en el compendio. Se muestra una pregunta a la vez, con retroalimentación inmediata.</p>
+        <label style="display:flex;align-items:center;gap:.5rem;font-weight:600;font-size:.88rem;margin:1rem 0;">
+          <input type="checkbox" id="timerToggle"> Activar temporizador de estudio (60s por pregunta)
+        </label>
+        <button class="btn-primary" id="startExamBtn">Comenzar examen</button>
+      </div>
+
+      <div class="card" id="examQuizScreen" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span id="qCounter" style="font-weight:700;color:var(--naranja-2);"></span>
+          <span class="exam-timer" id="qTimer"></span>
+        </div>
+        <div class="exam-progress"><div class="exam-progress-fill" id="examProgressFill"></div></div>
+        <h3 id="qText" style="margin-top:1rem;"></h3>
+        <div id="qOptions"></div>
+        <div class="exam-feedback" id="qFeedback"></div>
+        <button class="btn-primary" id="nextBtn" disabled>Siguiente</button>
+      </div>
+
+      <div class="card" id="examResults" style="display:none;">
+        <h2 style="text-align:center;">Resultados del Examen</h2>
+        <div class="score-ring" id="scoreRing">--</div>
+        <div class="result-grid">
+          <div class="result-box ok"><span class="big" id="aciertosCount">0</span>Aciertos</div>
+          <div class="result-box bad"><span class="big" id="erroresCount">0</span>Errores</div>
+        </div>
+        <div id="recoBox"></div>
+        <div style="display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem;" class="no-print">
+          <button class="btn-primary" id="retryBtn">🔄 Reintentar (nuevo examen)</button>
+          <button class="btn-secondary" id="printBtn">🖨️ Imprimir / Guardar PDF</button>
+          <button class="btn-secondary" id="toggleReportBtn">📄 Ver reporte detallado</button>
+        </div>
+        <div id="reportContent" style="display:none;margin-top:1.5rem;"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* =================================================================
+   DATOS: BANCO DE 150 PREGUNTAS  [modulo, pregunta, [opciones], correctaIdx, explicacion]
+================================================================= */
+const QB = [
+[1,"¿En qué año se inventó el baloncesto?",["1881","1891","1901","1871"],1,"El baloncesto fue creado en diciembre de 1891 por James Naismith."],
+[1,"¿En qué institución fue creado el baloncesto?",["Harvard University","Springfield College","Yale University","MIT"],1,"Naismith lo creó en Springfield College, Massachusetts."],
+[1,"¿Quién fue el creador del baloncesto?",["James Naismith","John Wooden","Luther Gulick","Dean Smith"],0,"El Dr. James Naismith, profesor de Educación Física, creó el baloncesto."],
+[1,"¿Cuál era la nacionalidad del Dr. James Naismith?",["Estadounidense","Canadiense","Inglés","Escocés"],1,"Naismith era un profesor canadiense de Educación Física."],
+[1,"¿Cuál fue el propósito original al crear el baloncesto?",["Sustituir el fútbol americano en verano","Crear una alternativa de bajo impacto en ambiente cerrado durante el invierno","Entrenar boxeadores","Reemplazar el atletismo"],1,"Buscaba un deporte de bajo impacto para practicarse en interiores durante el invierno."],
+[1,"¿Qué deporte inspiró la mecánica de los pases del baloncesto?",["Rugby estadounidense","Béisbol","Voleibol","Hockey"],0,"El rugby estadounidense inspiró la mecánica de los pases."],
+[1,"¿Qué deporte inspiró los saltos en el baloncesto?",["Rugby inglés","Atletismo","Fútbol","Boxeo"],0,"El rugby inglés inspiró los saltos del juego."],
+[1,"¿Qué juego infantil inspiró la puntería a un objetivo elevado?",["Pato en la roca","Herradura","Tiro al blanco","Bolos"],0,"\"Pato en una roca\" inspiró la puntería hacia un objetivo elevado."],
+[1,"¿Cuál fue la propuesta inicial de nombre para el nuevo deporte?",["Juego Naismith","Basket Game","Cesta Ball","Netball"],0,"Se propuso inicialmente el nombre \"Juego Naismith\"."],
+[1,"¿Qué nombre prevaleció finalmente para el deporte?",["Basket Game","Baloncesto","Cesta Ball","Netball"],1,"Finalmente prevaleció el nombre de Baloncesto."],
+[1,"¿Dónde se disputó el primer partido internacional de baloncesto en 1893?",["Montmartre, París","Londres","Berlín","Nueva York"],0,"El primer partido internacional se jugó en Montmartre, París, en 1893."],
+[1,"¿Qué liga fundada en 1898 es considerada la primera liga profesional de baloncesto?",["NBA","NBL","BAA","ABA"],1,"La NBL, fundada en 1898, fue la primera liga profesional."],
+[1,"¿En qué país se fundó la FIBA en 1932?",["Francia","Suiza","Estados Unidos","Bélgica"],1,"La FIBA se fundó en Suiza en 1932."],
+[1,"¿En qué edición de los Juegos Olímpicos debutó el baloncesto masculino?",["Los Ángeles 1932","Berlín 1936","Londres 1948","París 1924"],1,"El baloncesto masculino debutó en los Juegos Olímpicos de Berlín 1936."],
+[1,"¿En qué edición de los Juegos Olímpicos debutó el baloncesto femenino?",["Múnich 1972","Montreal 1976","Moscú 1980","Los Ángeles 1984"],1,"El baloncesto femenino debutó en los Juegos Olímpicos de Montreal 1976."],
+
+[2,"¿Cuáles son las medidas oficiales de la cancha según la FIBA?",["28 m x 15 m","26 m x 14 m","30 m x 16 m","24 m x 13 m"],0,"La cancha oficial FIBA mide 28 m de largo por 15 m de ancho."],
+[2,"¿Cuál es el diámetro del círculo central?",["3.0 m","3.6 m","4.2 m","2.4 m"],1,"El círculo central tiene un diámetro de 3.6 m."],
+[2,"¿Cuál es el radio del semicírculo de no carga bajo la canasta?",["1.00 m","1.25 m","1.50 m","1.75 m"],1,"El semicírculo de no carga tiene un radio de 1.25 m."],
+[2,"¿Cuáles son las dimensiones oficiales del tablero?",["1.05 x 1.80 m","1.20 x 2.00 m","0.90 x 1.50 m","1.00 x 1.60 m"],0,"El tablero mide 1.05 x 1.80 m."],
+[2,"¿Cuál es el grosor mínimo permitido del tablero?",["20 mm","30 mm","40 mm","50 mm"],1,"El grosor mínimo del tablero es de 30 mm."],
+[2,"¿Cómo debe estar fijado el tablero?",["Suspendido libremente","Anclado al suelo","Sujeto solo al techo","Sobre ruedas"],1,"El tablero debe estar anclado firmemente al suelo."],
+[2,"¿A qué altura debe estar el aro según el reglamento?",["2.90 m","3.05 m","3.20 m","3.50 m"],1,"El aro se coloca a 3.05 m de altura reglamentaria."],
+[2,"¿A qué distancia se ubica el aro respecto a la línea de fondo?",["0.90 m","1.20 m","1.50 m","1.80 m"],1,"El aro se ubica a 1.20 m dentro del campo desde la línea de fondo."],
+[2,"¿Cuántos puntos de agarre (grip points) tiene un balón oficial?",["7,200","9,366","10,500","8,000"],1,"El balón oficial tiene 9,366 puntos de agarre."],
+[2,"En la prueba de rebote reglamentario, el balón se deja caer desde 1.80 m; ¿entre qué alturas debe rebotar?",["0.80-1.00 m","1.20-1.40 m","1.50-1.70 m","1.00-1.20 m"],1,"Debe rebotar entre 1.20 m y 1.40 m para considerarse reglamentario."],
+[2,"¿Cuál es la circunferencia del balón categoría #7 (varonil)?",["69-70 cm","72-73 cm","74-76 cm","77-79 cm"],2,"El balón categoría #7 (varonil) mide entre 74 y 76 cm de circunferencia."],
+[2,"¿Cuál es el rango de peso del balón categoría #7?",["470-510 g","510-567 g","567-610 g","620-650 g"],2,"El balón categoría #7 pesa entre 567 y 610 g."],
+[2,"¿Cuál es la circunferencia del balón categoría #6 (femenil)?",["69-70 cm","72-73 cm","74-76 cm","76-78 cm"],1,"El balón categoría #6 (femenil) mide entre 72 y 73 cm."],
+[2,"¿Cuáles son las medidas del balón categoría #5 (infantil)?",["69-70 cm, 470-510 g","72-73 cm, 510-567 g","74-76 cm, 567-610 g","65-67 cm, 400-450 g"],0,"El balón categoría #5 (infantil) mide 69-70 cm y pesa 470-510 g."],
+[2,"¿Qué organismo internacional rige las especificaciones oficiales de la cancha y el equipamiento?",["NBA","FIBA","COI","ADEMEBA"],1,"La FIBA rige las especificaciones oficiales del equipamiento y la cancha."],
+
+[3,"¿Qué indica un árbitro al señalar con los dedos hacia abajo (1 o 2 dedos)?",["Puntos anotados en tiro de campo","Falta técnica","Tiempo fuera","Sustitución"],0,"Los dedos hacia abajo indican los puntos anotados en tiro de campo."],
+[3,"¿Qué significa la señal de 3 dedos levantados por el árbitro?",["Triple convertido","Intento de tiro de 3 puntos","Falta antideportiva","Tres faltas del equipo"],1,"Tres dedos levantados indican un intento de tiro de 3 puntos."],
+[3,"¿Qué señal indica un triple convertido?",["3 dedos levantados","Palma abierta","Dos manos arriba","Puño cerrado"],2,"Dos manos arriba indican que el triple fue convertido."],
+[3,"¿Qué señal usa el árbitro para detener el reloj de juego?",["Palma abierta","Puño cerrado","Corte con la mano","Dos manos arriba"],0,"La palma abierta indica detener el reloj."],
+[3,"¿Qué indica el puño cerrado del árbitro?",["Reanudar el reloj","Falta cometida","Canasta anotada","Balón fuera"],1,"El puño cerrado indica una falta cometida."],
+[3,"¿Qué señal se usa para reanudar el reloj de juego?",["Palma abierta","Puño cerrado","Corte con la mano","3 dedos"],2,"El corte con la mano indica reanudar el reloj."],
+[3,"¿Qué gesto representa una falta técnica?",["Una \"T\" con las manos","Manos en la cintura","Puño cerrado","Palma abierta"],0,"La \"T\" formada con las manos representa una falta técnica."],
+[3,"¿Qué señal indica un bloqueo?",["Manos en la cintura","Sujetar la muñeca sobre la cabeza","Una \"T\" con las manos","Puño cerrado"],0,"Las manos en la cintura señalan un bloqueo."],
+[3,"¿Qué señal indica una falta antideportiva?",["Manos en la cintura","Sujetar la muñeca sobre la cabeza","Palma abierta","3 dedos"],1,"Sujetar la muñeca sobre la cabeza indica falta antideportiva."],
+[3,"¿Con qué gesto se representa un bloqueo defensivo ilegal?",["Manos en la cintura","Puño cerrado","Corte con la mano","Palma abierta"],0,"El bloqueo se representa con las manos en la cintura."],
+[3,"¿Qué figura arbitral, junto al árbitro principal, apoya el control del partido?",["El anotador","Los árbitros auxiliares","El entrenador","El capitán"],1,"Los árbitros auxiliares apoyan al árbitro principal en el control del partido."],
+[3,"¿Cuál señal corporal indica claramente \"falta antideportiva\"?",["Sujetar la muñeca sobre la cabeza","3 dedos levantados","Palma abierta","Manos en la cintura"],0,"Sujetar la muñeca sobre la cabeza es la señal de falta antideportiva."],
+[3,"¿Cuál señal se asocia a un intento fallido de triple?",["3 dedos levantados","Dos manos arriba","Puño cerrado","Palma abierta"],0,"3 dedos levantados indican intento de triple, convertido o no."],
+[3,"¿Qué indica la señal de dos manos levantadas hacia arriba?",["Falta técnica","Triple convertido","Tiempo fuera","Balón fuera"],1,"Dos manos levantadas indican un triple convertido."],
+[3,"¿Cuál es la función general de la señalización arbitral en el baloncesto?",["Comunicar decisiones de juego a jugadores y público","Reemplazar al anotador","Sustituir el reglamento","Decidir el marcador final"],0,"La señalización comunica de forma clara las decisiones arbitrales."],
+
+[4,"¿Cuáles son los elementos de la postura defensiva obligatoria?",["Rodillas flexionadas, cadera baja, espalda recta, palmas arriba","Piernas rectas, espalda curva, manos abajo","Rodillas bloqueadas, cadera alta","Pies juntos, brazos cruzados"],0,"La postura defensiva exige rodillas flexionadas, cadera baja, espalda recta y palmas arriba."],
+[4,"¿Cuáles son los tres elementos de la Trilogía Técnica?",["Bote, pase, tiro","Ataque, defensa, transición","Fuerza, velocidad, resistencia","Táctica, técnica, estrategia"],0,"La Trilogía Técnica está compuesta por el bote, el pase y el tiro."],
+[4,"¿En qué situación se utiliza el bote de Protección?",["Bajo presión defensiva","En avance libre","Para crear espacio","En el rebote"],0,"El bote de Protección se usa bajo presión defensiva."],
+[4,"¿Qué tipo de bote se usa para el avance sin oposición?",["Protección","Control","Alejamiento","Ninguno"],1,"El bote de Control se usa para avanzar sin oposición."],
+[4,"¿Qué tipo de bote busca crear espacio o evitar un 2x1?",["Protección","Control","Alejamiento","Reversa"],2,"El bote de Alejamiento busca crear espacio o evitar un 2x1."],
+[4,"¿Cuántos tipos de pase se describen en el compendio?",["5","6","8","10"],2,"Se describen 8 tipos de pase."],
+[4,"¿Qué tipo de pase rebota en el piso antes de llegar al receptor?",["Pase de pecho","Pase picado","Pase elevado","Pase ciego"],1,"El pase picado rebota en el piso antes de llegar al receptor."],
+[4,"¿Qué tipo de pase se realiza sin mirar directamente al receptor?",["Pase ciego","Pase al toque","Pase de béisbol","Pase saltando"],0,"El pase ciego se entrega sin mirar directamente al receptor."],
+[4,"¿Qué tipo de pase se ejecuta con una sola mano a larga distancia, similar al lanzamiento de béisbol?",["Pase de pecho","Pase de béisbol","Pase picado","Pase al toque"],1,"El pase de béisbol se ejecuta a una mano y larga distancia."],
+[4,"¿Cuántos tipos de tiro se mencionan en el compendio?",["4","5","7","9"],2,"Se mencionan 7 tipos de tiro."],
+[4,"¿Cuál es el primer paso de la ciencia del rebote?",["Salto vertical","Brazos elevados","Toma en el punto más alto","Aseguramiento con ambas manos"],1,"El primer paso es elevar los brazos."],
+[4,"¿Cuál es el segundo paso de la ciencia del rebote?",["Brazos elevados","Salto vertical","Protección al bajar","Aseguramiento con ambas manos"],1,"El segundo paso es el salto vertical."],
+[4,"¿Cuál es el tercer paso de la ciencia del rebote?",["Toma en el punto más alto","Salto vertical","Brazos elevados","Protección al bajar"],0,"El tercer paso es la toma del balón en el punto más alto."],
+[4,"¿Cuál es el cuarto paso de la ciencia del rebote?",["Brazos elevados","Aseguramiento con ambas manos","Salto vertical","Toma en el punto más alto"],1,"El cuarto paso es asegurar el balón con ambas manos."],
+[4,"¿Cuál es el quinto y último paso de la ciencia del rebote?",["Salto vertical","Toma en el punto más alto","Protección al bajar (codos fuera)","Brazos elevados"],2,"El quinto paso es proteger el balón al bajar, con los codos hacia afuera."],
+
+[5,"Según Matveiev (1986), ¿qué es el sentido táctico?",["La aptitud de identificar situaciones, prever acciones y elegir soluciones","La capacidad física máxima del jugador","El plan de entrenamiento anual","La ejecución perfecta de la técnica"],0,"Matveiev define el sentido táctico como la aptitud de identificar situaciones, prever acciones y elegir soluciones."],
+[5,"¿Cuántos tipos de interacciones tácticas describen Bauer y Ueberle (1988)?",["3","4","5","6"],2,"Bauer y Ueberle describen 5 tipos de interacciones tácticas."],
+[5,"¿Cuál NO es un tipo de interacción táctica según Bauer y Ueberle?",["Táctica individual","Táctica colectiva","Situaciones estándar","Táctica ofensiva-defensiva mixta"],3,"Los 5 tipos son: individual, colectiva, de equipo, situaciones estándar y práctica del día del partido."],
+[5,"¿Cómo se define la Técnica dentro de la Tríada Deportiva?",["Ejecución de movimientos estructurales basados en patrones espaciales modelo","Plan a largo plazo para vencer al rival","Solución inmediata ante un oponente","Selección de deportistas"],0,"La técnica es la ejecución de movimientos basados en patrones espaciales modelo."],
+[5,"¿Cuál es un ejemplo de Técnica según el compendio?",["Selección de deportistas","Mecánica de tiro y drible","Sistemas de juego","Plan de entrenamiento"],1,"La mecánica de tiro y el drible son ejemplos de técnica."],
+[5,"¿Cómo se define la Táctica dentro de la Tríada Deportiva?",["Plan de acción a largo plazo","Proceso que conjuga facultades físicas, técnicas y psicológicas para solución inmediata","Ejecución de un patrón espacial fijo","Selección del personal técnico"],1,"La táctica conjuga facultades físicas, técnicas y psicológicas para una solución inmediata."],
+[5,"¿Cuál es un ejemplo de Táctica según el compendio?",["Tiro con oposición y amagar pivote","Plan de entrenamiento anual","Selección de deportistas","Mecánica de tiro"],0,"El tiro con oposición y amagar pivote son ejemplos de táctica."],
+[5,"¿Cómo se define la Estrategia dentro de la Tríada Deportiva?",["Ejecución técnica inmediata","Plan de acción definido a largo plazo para superar al oponente","Reacción instantánea ante el rival","Patrón espacial de movimiento"],1,"La estrategia es un plan de acción a largo plazo para superar al oponente."],
+[5,"¿Cuál es un ejemplo de Estrategia según el compendio?",["Amagar pivote","Selección de deportistas y sistemas de juego","Mecánica de tiro","Tiro con oposición"],1,"La selección de deportistas y los sistemas de juego son ejemplos de estrategia."],
+[5,"En el modelo táctico Overload, ¿cuántos jugadores se concentran en un mismo sector?",["2","3","4","5"],1,"En el Overload se concentran 3 jugadores en un mismo sector."],
+[5,"¿Cuál es la zona de impacto del modelo Overload?",["Centro de la zona","Lateral y esquina","Línea de tiros libres","Medio campo"],1,"La zona de impacto del Overload es el lateral y la esquina."],
+[5,"En el modelo High-Low, ¿quién distribuye el balón desde la bombilla?",["El base","El interior/pívot","El escolta","El entrenador"],1,"El interior distribuye el balón desde la bombilla en el High-Low."],
+[5,"¿Cuál es la zona de impacto del modelo High-Low?",["Perímetro de 3 puntos","Centro de la zona y tiros libres","Esquina","Medio campo"],1,"La zona de impacto del High-Low es el centro de la zona y los tiros libres."],
+[5,"¿Qué caracteriza al modelo Ball Reversal?",["Bote excesivo por un solo jugador","Circulación rápida del balón sin bote excesivo","Juego exclusivamente interior","Defensa individual"],1,"El Ball Reversal se caracteriza por la circulación rápida sin bote excesivo."],
+[5,"En la defensa del poste bajo \"a tres cuartos\", ¿qué se busca principalmente?",["Defender con balón de frente","Evitar el pase cortando la línea con pie y mano","Permitir el pase para robar después","Doblar sobre el poste alto"],1,"La defensa a tres cuartos busca evitar el pase cortando la línea con pie y mano."],
+
+[6,"¿Cuál es la primera etapa del ciclo de planificación del entrenamiento?",["Definición de objetivos","Análisis del estado del atleta","Selección de ejercicios","Evaluación de resultados"],1,"La primera etapa es el análisis del estado del atleta."],
+[6,"¿Cuál es la segunda etapa del ciclo de planificación?",["Análisis del estado del atleta","Definición de objetivos","Estructuración de sesiones","Planificación de descansos"],1,"La segunda etapa es la definición de objetivos."],
+[6,"¿Cuál es la tercera etapa del ciclo de planificación?",["Selección de ejercicios","Evaluación de resultados","Definición de objetivos","Planificación de descansos"],0,"La tercera etapa es la selección de ejercicios."],
+[6,"¿Cuál es la cuarta etapa del ciclo de planificación?",["Estructuración de sesiones","Análisis del estado del atleta","Evaluación de resultados","Selección de ejercicios"],0,"La cuarta etapa es la estructuración de sesiones."],
+[6,"¿Cuál es la quinta etapa del ciclo de planificación?",["Definición de objetivos","Planificación de descansos","Selección de ejercicios","Análisis del estado del atleta"],1,"La quinta etapa es la planificación de descansos."],
+[6,"¿Cuál es la sexta y última etapa del ciclo de planificación?",["Evaluación de resultados","Estructuración de sesiones","Definición de objetivos","Análisis del estado del atleta"],0,"La sexta etapa es la evaluación de resultados."],
+[6,"¿Cuántas etapas conforman el ciclo de planificación del entrenamiento?",["4","5","6","7"],2,"El ciclo se compone de 6 etapas."],
+[6,"¿Qué etapa antecede directamente a \"selección de ejercicios\"?",["Análisis del estado del atleta","Definición de objetivos","Estructuración de sesiones","Evaluación de resultados"],1,"La definición de objetivos antecede a la selección de ejercicios."],
+[6,"¿Qué etapa sigue inmediatamente después de \"estructuración de sesiones\"?",["Planificación de descansos","Evaluación de resultados","Definición de objetivos","Selección de ejercicios"],0,"Después de estructurar las sesiones sigue la planificación de descansos."],
+[6,"¿Cuál es el propósito de la etapa de \"evaluación de resultados\"?",["Diseñar los ejercicios iniciales","Verificar el cumplimiento de objetivos y ajustar el plan","Sustituir a los entrenadores","Definir las reglas del juego"],1,"Esta etapa permite verificar el cumplimiento de objetivos y ajustar el plan."],
+[6,"¿Por qué es relevante planificar los descansos dentro del ciclo de entrenamiento?",["Favorece la recuperación y previene el sobreentrenamiento","No influye en el rendimiento","Sustituye la evaluación de resultados","Elimina la necesidad de objetivos"],0,"Planificar los descansos favorece la recuperación y evita el sobreentrenamiento."],
+[6,"¿Qué etapa implica conocer el nivel físico y técnico inicial del deportista?",["Análisis del estado del atleta","Estructuración de sesiones","Evaluación de resultados","Planificación de descansos"],0,"El análisis del estado del atleta permite conocer su nivel inicial."],
+[6,"¿Qué etapa traduce los objetivos en actividades concretas de entrenamiento?",["Selección de ejercicios","Evaluación de resultados","Análisis del estado del atleta","Planificación de descansos"],0,"La selección de ejercicios traduce los objetivos en actividades concretas."],
+[6,"El ciclo de planificación del entrenamiento se caracteriza por ser...",["Un proceso lineal y secuencial de etapas","Un evento único sin seguimiento","Una decisión exclusiva del árbitro","Una etapa aislada sin relación con el rendimiento"],0,"Es un proceso lineal y secuencial compuesto por 6 etapas."],
+[6,"¿Qué etapa cierra el ciclo permitiendo iniciar un nuevo ciclo de mejora?",["Evaluación de resultados","Definición de objetivos","Selección de ejercicios","Análisis del estado del atleta"],0,"La evaluación de resultados cierra el ciclo y da paso a uno nuevo."],
+
+[7,"¿En qué rango de edad se ubica la fase de Iniciación en la detección de talento?",["6-9 años","10-13 años","14-17 años","18-21 años"],0,"La fase de Iniciación abarca de 6 a 9 años."],
+[7,"¿A qué categorías corresponde la fase de Iniciación?",["Micro e Infantil","Pasarela y Cadete","Juvenil y Juvenil Mayor","Sub-21"],0,"La fase de Iniciación corresponde a las categorías Micro e Infantil."],
+[7,"¿Qué caracteriza a la fase de Iniciación?",["Alto rendimiento competitivo","100% lúdico, agilidad y coordinación ojo-mano","Evaluaciones estructuradas de estatura","Especialización posicional"],1,"La fase de Iniciación es 100% lúdica, centrada en agilidad y coordinación ojo-mano."],
+[7,"¿En qué rango de edad se ubica la fase de Detección Activa?",["6-9 años","10-13 años","14-17 años","22-25 años"],1,"La fase de Detección Activa abarca de 10 a 13 años."],
+[7,"¿A qué categorías corresponde la fase de Detección Activa?",["Micro e Infantil","Pasarela y Cadete","Juvenil y Juvenil Mayor","Máster"],1,"Corresponde a las categorías Pasarela y Cadete."],
+[7,"¿Qué caracteriza a la fase de Detección Activa?",["Juego 100% libre","Evaluaciones estructuradas y predicción de estatura","Retiro deportivo","Selección profesional inmediata"],1,"Se caracteriza por evaluaciones estructuradas y predicción de estatura."],
+[7,"¿En qué rango de edad se ubica la fase de Especialización?",["6-9 años","10-13 años","14-17 años","25-30 años"],2,"La fase de Especialización abarca de 14 a 17 años."],
+[7,"¿A qué categorías corresponde la fase de Especialización?",["Micro e Infantil","Pasarela y Cadete","Juvenil y Juvenil Mayor","Veteranos"],2,"Corresponde a las categorías Juvenil y Juvenil Mayor."],
+[7,"¿Qué caracteriza a la fase de Especialización?",["Juego exclusivamente recreativo","Alto rendimiento y adaptación post-estirón puberal","Ausencia de evaluación física","Enfoque únicamente táctico"],1,"Se caracteriza por el alto rendimiento y la adaptación post-estirón puberal."],
+[7,"¿Qué es el Bio-Banding?",["Agrupar por edad cronológica estrictamente","Agrupar por maduración física real en lugar de edad cronológica","Un sistema de arbitraje","Un tipo de entrenamiento de fuerza"],1,"El Bio-Banding agrupa por maduración física real, no por edad cronológica."],
+[7,"¿Qué problema busca evitar el Bio-Banding?",["Excluir a los \"maduradores tardíos\"","Aumentar el número de árbitros","Reducir el número de categorías","Eliminar las evaluaciones físicas"],0,"Busca evitar la exclusión de los \"maduradores tardíos\"."],
+[7,"¿Cuántas fases sensibles de detección de talento se describen en el compendio?",["2","3","4","5"],1,"Se describen 3 fases sensibles."],
+[7,"¿Cuál es la primera fase sensible de detección de talento?",["Especialización","Detección Activa","Iniciación","Bio-Banding"],2,"La primera fase sensible es la Iniciación."],
+[7,"¿Cuál es la fase intermedia de detección de talento?",["Iniciación","Detección Activa","Especialización","Retiro"],1,"La fase intermedia es la Detección Activa."],
+[7,"¿Cuál es la última fase, orientada al alto rendimiento?",["Iniciación","Detección Activa","Especialización","Bio-Banding"],2,"La última fase, orientada al alto rendimiento, es la Especialización."],
+
+[8,"¿Qué afirmó el Dr. Burkhart sobre la relación visión-decisión-acción?",["El cuerpo actúa antes de que los ojos miren","Los ojos deben mirar y el cerebro decidir antes de que el cuerpo ejecute la acción","La decisión ocurre después de la acción","La visión no influye en la ejecución técnica"],1,"Burkhart afirma que los ojos miran y el cerebro decide antes de que el cuerpo actúe."],
+[8,"¿Para qué sirve el entrenamiento visual cercano y lejano?",["Aumentar la fuerza muscular","Procesar detalles en milisegundos y mejorar la toma de decisiones","Reducir la estatura del jugador","Sustituir el entrenamiento técnico"],1,"Sirve para procesar detalles en milisegundos y mejorar la toma de decisiones."],
+[8,"¿Con qué se relaciona principalmente la dimensión cognitiva en el baloncesto?",["La toma de decisiones","La resistencia aeróbica","La flexibilidad articular","El peso corporal"],0,"La dimensión cognitiva se relaciona principalmente con la toma de decisiones."],
+[8,"Según Burkhart, ¿qué debe ocurrir antes de la ejecución motriz?",["La ejecución técnica automática","La decisión cerebral basada en lo que ven los ojos","El descanso muscular","La señal del árbitro"],1,"Debe ocurrir la decisión cerebral basada en lo que ven los ojos."],
+[8,"¿Qué tipo de entrenamiento mejora la velocidad de procesamiento visual del jugador?",["Entrenamiento de fuerza máxima","Entrenamiento visual cercano y lejano","Entrenamiento de flexibilidad","Entrenamiento aeróbico continuo"],1,"El entrenamiento visual cercano y lejano mejora la velocidad de procesamiento."],
+[8,"La capacidad de tomar decisiones rápidas en milisegundos se asocia principalmente a...",["La dimensión física","La dimensión cognitiva","La dimensión histórica","La dimensión reglamentaria"],1,"Se asocia principalmente a la dimensión cognitiva."],
+[8,"Además de la dimensión física, ¿qué otra dimensión es esencial en el rendimiento del jugador?",["La dimensión cognitiva","La dimensión estética","La dimensión administrativa","La dimensión climática"],0,"La dimensión cognitiva es esencial junto con la física."],
+[8,"El entrenamiento cognitivo-visual busca reducir principalmente...",["El tiempo de reacción y decisión","El tamaño de la cancha","El número de árbitros","La duración del partido"],0,"Busca reducir el tiempo de reacción y decisión del jugador."],
+[8,"¿Qué relación existe entre percepción visual y ejecución técnica según el compendio?",["No existe relación entre ambas","La percepción visual antecede y guía la ejecución técnica","La ejecución técnica antecede a la percepción","Son procesos completamente independientes"],1,"La percepción visual antecede y guía la ejecución técnica."],
+[8,"¿Por qué es relevante procesar información en milisegundos en el baloncesto?",["El juego exige decisiones rápidas ante estímulos cambiantes","No influye en el rendimiento competitivo","Solo aplica a los árbitros","Es relevante únicamente en el entrenamiento de fuerza"],0,"El juego exige decisiones rápidas ante estímulos que cambian constantemente."],
+[8,"La cita del Dr. Burkhart resalta principalmente la importancia de...",["La secuencia visión-decisión-acción","La fuerza explosiva de piernas","El tamaño del balón","La duración de los cuartos"],0,"Resalta la secuencia visión-decisión-acción."],
+[8,"¿Qué dimensión estudia cómo el jugador percibe y decide durante el juego?",["Dimensión histórica","Dimensión cognitiva","Dimensión arbitral","Dimensión organizacional"],1,"La dimensión cognitiva estudia la percepción y la decisión del jugador."],
+[8,"El trabajo de visión periférica se relaciona principalmente con...",["La postura defensiva y la anticipación","El peso del balón","La altura del aro","El tipo de cancha"],0,"La visión periférica se relaciona con la postura defensiva y la anticipación."],
+[8,"¿Qué componente del rendimiento integra lo físico y lo cognitivo en el jugador?",["La capacidad de decisión táctica","El tamaño del uniforme","La antigüedad del club","El color del balón"],0,"La capacidad de decisión táctica integra lo físico y lo cognitivo."],
+[8,"En el contexto del compendio, ¿qué papel cumple el cerebro según Burkhart?",["Tomar la decisión antes de que el cuerpo ejecute la acción","Ejecutar la acción motriz directamente","Sustituir la función de los ojos","No tiene un papel relevante en el juego"],0,"El cerebro toma la decisión antes de que el cuerpo ejecute la acción."],
+
+[9,"¿Qué tipos de fracturas se mencionan como lesiones técnicas del baloncesto?",["Agudas o por estrés","Solo agudas","Solo por estrés","Congénitas"],0,"Se mencionan fracturas agudas o por estrés."],
+[9,"¿Qué implica un esguince Grado I?",["Ruptura total del ligamento","Distensión ligamentosa sin ruptura","Ruptura parcial del ligamento","Fractura ósea"],1,"El esguince Grado I implica una distensión ligamentosa sin ruptura."],
+[9,"¿Qué implica un esguince Grado II?",["Distensión leve","Ruptura parcial del ligamento","Ruptura total del ligamento","Tendinitis crónica"],1,"El esguince Grado II implica una ruptura parcial del ligamento."],
+[9,"¿Qué implica un esguince Grado III?",["Distensión leve","Ruptura parcial","Ruptura total del ligamento","Ninguna lesión"],2,"El esguince Grado III implica la ruptura total del ligamento."],
+[9,"¿Qué ejemplo de tendinitis se menciona en el compendio?",["Tendinitis rotuliana","Tendinitis de Aquiles","Tendinitis del manguito rotador","Tendinitis de muñeca"],1,"Se menciona la tendinitis de Aquiles como ejemplo."],
+[9,"¿Cuál es un síntoma característico de una lesión aguda?",["Dolor intenso y repentino","Dolor leve y constante en reposo","Ausencia total de dolor","Dolor solo después de una semana"],0,"El dolor intenso y repentino es característico de la lesión aguda."],
+[9,"¿Qué otro síntoma es propio de una lesión aguda?",["Moretones e hinchazón extrema","Dolor leve intermitente","Rigidez matutina únicamente","Fatiga muscular general"],0,"Los moretones y la hinchazón extrema son propios de la lesión aguda."],
+[9,"¿Qué síntoma grave puede indicar una lesión aguda severa?",["Hueso o articulación fuera de lugar","Enrojecimiento leve de la piel","Sudoración excesiva","Aumento del apetito"],0,"Un hueso o articulación fuera de lugar indica una lesión aguda severa."],
+[9,"¿Cuál es un síntoma típico de una lesión crónica?",["Dolor persistente durante el juego","Pérdida total de consciencia","Fiebre alta","Dolor únicamente al despertar"],0,"El dolor persistente durante el juego es típico de la lesión crónica."],
+[9,"¿Qué otro síntoma se asocia a una lesión crónica?",["Hinchazón y dolor leve constante en reposo","Deformidad ósea inmediata","Pérdida completa de movilidad","Fractura expuesta"],0,"La hinchazón y el dolor leve constante en reposo se asocian a la lesión crónica."],
+[9,"¿Cuál es la causa típica de una lesión crónica en el baloncesto?",["Uso excesivo","Un solo impacto directo","Falta de calentamiento únicamente","Deshidratación severa"],0,"El uso excesivo es la causa típica de una lesión crónica."],
+[9,"¿Qué grado de esguince implica la ruptura total del ligamento?",["Grado I","Grado II","Grado III","No se clasifica"],2,"El Grado III implica la ruptura total del ligamento."],
+[9,"¿Qué grado de esguince implica solo distensión sin ruptura?",["Grado I","Grado II","Grado III","Ninguno"],0,"El Grado I implica solo distensión sin ruptura."],
+[9,"¿Cuál es la clasificación general de lesiones técnicas del baloncesto según el compendio?",["Fracturas, esguinces, desgarros/distensiones y tendinitis","Solo fracturas y esguinces","Solo lesiones musculares","Únicamente lesiones articulares"],0,"La clasificación incluye fracturas, esguinces, desgarros/distensiones y tendinitis."],
+[9,"¿Qué diferencia principal existe entre una lesión aguda y una crónica?",["La aguda es repentina e intensa; la crónica es por uso excesivo y persistente","No existe ninguna diferencia","La crónica siempre requiere cirugía inmediata","La aguda nunca presenta dolor"],0,"La aguda es repentina e intensa; la crónica surge por uso excesivo y es persistente."],
+
+[10,"¿Qué mide el seguimiento tecnológico mediante GPS y sensores?",["Datos en tiempo real para optimizar la mecánica de tiro","Solo el peso corporal","El clima durante el partido","La cantidad de espectadores"],0,"El seguimiento tecnológico mide datos en tiempo real para optimizar la mecánica de tiro."],
+[10,"¿Qué evalúa principalmente el seguimiento estadístico?",["Indicadores de rendimiento como eficiencia y % de tiro","La nacionalidad de los jugadores","El color del uniforme","La duración del descanso"],0,"El seguimiento estadístico evalúa indicadores de rendimiento como eficiencia y % de tiro."],
+[10,"¿Cuántas confederaciones tiene la FIBA?",["3","4","5","6"],2,"La FIBA se organiza en 5 confederaciones."],
+[10,"¿Cuáles son las confederaciones de la FIBA?",["África, Américas, Asia, Europa, Oceanía","Norte, Sur, Este, Oeste","América, Europa, Asia","África, Europa, Antártida"],0,"Las confederaciones de la FIBA son África, Américas, Asia, Europa y Oceanía."],
+[10,"¿Qué organismo es el rector nacional del baloncesto en México?",["FIBA Américas","ADEMEBA","CONADE","COM"],1,"ADEMEBA es el rector nacional del baloncesto en México."],
+[10,"¿A qué instituciones está vinculada ADEMEBA?",["CONADE y COM","FIBA y NBA","ONU y UNESCO","SEP y IMSS"],0,"ADEMEBA está vinculada a CONADE y al COM."],
+[10,"¿Desde qué niveles opera ADEMEBA?",["Solo profesional","Desde Micro hasta Sub-21","Solo universitario","Solo Sub-21 en adelante"],1,"ADEMEBA opera desde niveles Micro hasta Sub-21."],
+[10,"¿Qué tecnología se usa para el seguimiento en tiempo real del rendimiento de los jugadores?",["GPS y sensores","Rayos X","Ultrasonido","Radar meteorológico"],0,"Se usan GPS y sensores para el seguimiento en tiempo real."],
+[10,"¿Qué tipo de datos aporta el seguimiento estadístico al entrenador?",["Eficiencia y porcentaje de tiro","Únicamente la altura de los jugadores","El historial médico completo","La opinión de los árbitros"],0,"Aporta datos de eficiencia y porcentaje de tiro."],
+[10,"¿En qué año y país se fundó la FIBA?",["1932 en Suiza","1936 en Alemania","1946 en Estados Unidos","1950 en Argentina"],0,"La FIBA se fundó en 1932 en Suiza."],
+[10,"¿Qué representa la sigla FIBA?",["Federación Internacional de Baloncesto","Federación Iberoamericana de Baloncesto","Federación Interna de Básquet Amateur","Fondo Internacional de Baloncesto Amateur"],0,"FIBA representa a la Federación Internacional de Baloncesto."],
+[10,"¿Qué representa la sigla ADEMEBA en el contexto mexicano?",["Asociación Deportiva Mexicana de Basquetbol","Academia Deportiva de México para el Basquetbol","Asociación Estatal de Básquet","Administración Deportiva de Basquetbol"],0,"ADEMEBA es la Asociación Deportiva Mexicana de Basquetbol."],
+[10,"¿Para qué se utiliza principalmente el seguimiento tecnológico en el baloncesto de alto rendimiento?",["Para optimizar la mecánica de tiro y el rendimiento general","Para reemplazar a los entrenadores","Para sustituir el arbitraje","Para definir el reglamento oficial"],0,"Se utiliza para optimizar la mecánica de tiro y el rendimiento general."],
+[10,"¿Qué confederación agrupa a los países del continente americano dentro de la FIBA?",["FIBA Europa","FIBA Américas","FIBA Asia","FIBA Oceanía"],1,"FIBA Américas agrupa a los países del continente americano."],
+[10,"¿Cómo se estructura el marco organizacional del baloncesto a nivel internacional y nacional?",["Federación internacional (FIBA) y organismos nacionales como ADEMEBA","Solo por clubes privados","Únicamente por gobiernos locales","No existe una estructura organizacional"],0,"Se estructura mediante la FIBA a nivel internacional y organismos nacionales como ADEMEBA."]
+];
+
+const MODULOS = {1:"Génesis y Evolución",2:"Terreno de Juego y Equipo",3:"Arbitraje",4:"Fundamentos Técnicos",5:"Táctica y Estrategia",6:"Planificación del Entrenamiento",7:"Detección de Talento",8:"Capacidades Físicas y Cognitivas",9:"Lesiones Deportivas",10:"Tecnología y Organizaciones"};
+const RECO = {
+ 1:"Repasa la línea histórica: orígenes, hitos clave (1893, 1898, 1932, 1936, 1976) y las 13 reglas de Naismith.",
+ 2:"Refuerza las medidas oficiales de la cancha, el tablero, el aro y las categorías de balón.",
+ 3:"Practica identificar las señales arbitrales de tanteo, reloj y faltas.",
+ 4:"Repasa la Trilogía Técnica (bote, pase, tiro) y los 5 pasos de la ciencia del rebote.",
+ 5:"Revisa los modelos tácticos ofensivos (Overload, High-Low, Ball Reversal) y la defensa de poste bajo.",
+ 6:"Repasa las 6 etapas del ciclo de planificación del entrenamiento y su orden correcto.",
+ 7:"Refuerza las fases sensibles de detección de talento y el concepto de Bio-Banding.",
+ 8:"Revisa la relación entre percepción visual, decisión cognitiva y ejecución técnica (Dr. Burkhart).",
+ 9:"Repasa la clasificación de lesiones (fracturas, esguinces Grado I-III, tendinitis) y sus síntomas.",
+ 10:"Refuerza el marco organizacional (FIBA, confederaciones, ADEMEBA) y el seguimiento tecnológico/estadístico."
+};
+
+/* =================== FLASHCARDS (40) [frente, dorso] =================== */
+const FC = [
+["Regla original #1 de Naismith","El balón puede lanzarse en cualquier dirección con una o ambas manos."],
+["Regla original #2 de Naismith","El balón puede golpearse en cualquier dirección, nunca con el puño."],
+["Regla original #3 de Naismith","No se puede correr con el balón; se lanza desde donde se captura."],
+["Regla original #4 de Naismith","El balón se sujeta solo con las manos."],
+["Regla original #5 de Naismith","Prohibido cargar, agarrar, empujar o zancadillear."],
+["Regla original #6 de Naismith","Golpear con el puño es falta."],
+["Regla original #7 de Naismith","Tres faltas consecutivas otorgan una canasta al equipo rival."],
+["Regla original #8 de Naismith","La canasta es válida si el balón entra y permanece en el cesto."],
+["Regla original #9 de Naismith","El balón fuera de banda lo devuelve quien lo toque primero."],
+["Regla original #10 de Naismith","El \"Umpire\" juzga a los jugadores y anota las faltas."],
+["Regla original #11 de Naismith","El \"Referee\" juzga el balón, el tiempo y la posesión."],
+["Regla original #12 de Naismith","Dos mitades de 15 minutos con 5 minutos de descanso."],
+["Regla original #13 de Naismith","Gana el equipo con más canastas."],
+["Dimensiones de la cancha FIBA","28 metros de largo por 15 metros de ancho."],
+["Diámetro del círculo central","3.6 metros."],
+["Radio del semicírculo de no carga","1.25 metros."],
+["Dimensiones del tablero","1.05 x 1.80 m, grosor mínimo de 30 mm."],
+["Altura del aro","3.05 metros."],
+["Balón categoría #7 (varonil)","74–76 cm de circunferencia, 567–610 g de peso."],
+["Balón categoría #6 (femenil)","72–73 cm de circunferencia, 510–567 g de peso."],
+["Balón categoría #5 (infantil)","69–70 cm de circunferencia, 470–510 g de peso."],
+["Prueba de rebote reglamentario","Al caer desde 1.80 m, el balón debe rebotar entre 1.20 y 1.40 m."],
+["Esguince Grado I","Distensión ligamentosa, sin ruptura."],
+["Esguince Grado II","Ruptura parcial del ligamento."],
+["Esguince Grado III","Ruptura total del ligamento."],
+["Síntomas de lesión aguda","Dolor intenso y repentino, hinchazón extrema, incapacidad de mover la articulación."],
+["Síntomas de lesión crónica","Dolor persistente en el juego, hinchazón y dolor leve constante en reposo."],
+["Técnica (Tríada Deportiva)","Ejecución de movimientos estructurales basados en patrones espaciales modelo. Ej: mecánica de tiro."],
+["Táctica (Tríada Deportiva)","Conjuga facultades físicas, técnicas y psicológicas ante el oponente. Ej: tiro con oposición."],
+["Estrategia (Tríada Deportiva)","Plan de acción a largo plazo para superar al oponente. Ej: selección de deportistas."],
+["Overload (Sobrecarga)","3 jugadores en un mismo sector; zona de impacto: lateral y esquina."],
+["High-Low (Poste Alto)","El interior distribuye desde la bombilla; zona de impacto: centro de la zona y tiros libres."],
+["Ball Reversal","Circulación rápida sin bote excesivo; impacto en línea de 3 (45°) y perímetro."],
+["Fase sensible: Iniciación","6-9 años (Micro e Infantil): 100% lúdico, agilidad, coordinación ojo-mano."],
+["Fase sensible: Detección Activa","10-13 años (Pasarela y Cadete): evaluaciones estructuradas y predicción de estatura."],
+["Fase sensible: Especialización","14-17 años (Juvenil y Juvenil Mayor): alto rendimiento y adaptación post-estirón puberal."],
+["Bio-Banding","Agrupación por maduración física real, no por edad cronológica, evita excluir 'maduradores tardíos'."],
+["5 pasos del rebote","1) Brazos elevados 2) Salto vertical 3) Toma en el punto más alto 4) Aseguramiento con ambas manos 5) Protección al bajar."],
+["Fundación de la FIBA","1932, en Suiza."],
+["ADEMEBA","Rector nacional del baloncesto en México, vinculado a CONADE y COM, desde Micro hasta Sub-21."],
+["Confederaciones de la FIBA","África, Américas, Asia, Europa y Oceanía."]
+];
+
+/* =================== JUEGO DE EMPAREJAMIENTO (12 pares) =================== */
+const MP = [
+["Pase de pecho","Pase directo a la altura del pecho del receptor"],
+["Pase picado","Bota en el suelo antes de llegar al receptor"],
+["Pase elevado","Trayectoria alta por encima de la defensa"],
+["Pase al toque","Se entrega de forma directa y rápida a corta distancia"],
+["Pase de béisbol","Lanzamiento largo a una mano, similar al béisbol"],
+["Pase saltando","Se ejecuta en el aire, antes de aterrizar"],
+["Pase por la espalda","El balón pasa por detrás del cuerpo del pasador"],
+["Pase ciego","Se entrega sin mirar directamente al receptor"],
+["Esguince Grado I","Distensión ligamentosa sin ruptura"],
+["Esguince Grado II","Ruptura parcial del ligamento"],
+["Esguince Grado III","Ruptura total del ligamento"],
+["Tendinitis de Aquiles","Inflamación del tendón por uso excesivo"]
+];
+
+/* =================== PIZARRA TÁCTICA =================== */
+const FORMATIONS = {
+ overload:{title:"Overload (Sobrecarga)",desc:"3 jugadores se concentran en un mismo lateral para generar superioridad numérica frente a la defensa. Zona de impacto: lateral y esquina.",pos:[[230,410],[250,300],[265,190],[60,370],[150,60]]},
+ highlow:{title:"High-Low (Ataque Poste Alto)",desc:"El interior distribuye el balón desde la bombilla hacia el poste bajo. Zona de impacto: centro de la zona y tiros libres.",pos:[[150,410],[75,250],[225,250],[150,150],[150,55]]},
+ ballreversal:{title:"Ball Reversal (Inversión y Bloqueos)",desc:"Circulación rápida del balón de lado a lado sin bote excesivo. Zona de impacto: línea de 3 puntos (45°) y perímetro.",pos:[[150,415],[45,290],[255,290],[45,140],[255,140]]},
+ zona:{title:"Defensa Zonal 2-3",desc:"Dos defensores cubren el perímetro alto (guardias) y tres cubren la zona baja (alero-pívot-alero), protegiendo el área cercana al aro.",pos:[[95,360],[205,360],[50,170],[150,140],[250,170]]}
+};
+
+/* =================================================================
+   NAVEGACIÓN PRINCIPAL (tabs)
+================================================================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('main.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+/* Barra de progreso de lectura (solo relevante en Apuntes) */
+window.addEventListener('scroll',()=>{
+  const h = document.documentElement;
+  const pct = (h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;
+  document.getElementById('readbar').style.width = (isFinite(pct)?pct:0)+'%';
+});
+
+/* Sidebar: resaltar sección activa */
+const sections = document.querySelectorAll('.module-section');
+const sideLinks = document.querySelectorAll('.side-link');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      sideLinks.forEach(l=>l.classList.remove('active'));
+      const link = document.querySelector('.side-link[data-target="'+e.target.id+'"]');
+      if(link) link.classList.add('active');
+    }
+  });
+},{rootMargin:"-30% 0px -60% 0px"});
+sections.forEach(s=>io.observe(s));
+
+/* =================================================================
+   FLASHCARDS render
+================================================================= */
+const fcGrid = document.getElementById('fcGrid');
+FC.forEach(([front,back])=>{
+  const el = document.createElement('div');
+  el.className='fc';
+  el.innerHTML = '<div class="fc-inner"><div class="fc-face fc-front">'+front+'<span class="fc-hint">clic para girar</span></div><div class="fc-face fc-back">'+back+'</div></div>';
+  el.addEventListener('click',()=>el.classList.toggle('flipped'));
+  fcGrid.appendChild(el);
+});
+
+/* =================================================================
+   SUBTABS MINI-JUEGOS
+================================================================= */
+document.querySelectorAll('.subtab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.subtab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById(btn.dataset.panel).classList.add('active');
+  });
+});
+
+/* =================================================================
+   JUEGO DE EMPAREJAMIENTO
+================================================================= */
+let matchState = {selTerm:null, selDef:null, matched:0};
+function shuffleArr(a){ const arr=[...a]; for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return arr; }
+
+function renderMatchGame(){
+  matchState = {selTerm:null, selDef:null, matched:0};
+  const termsEl = document.getElementById('matchTerms');
+  const defsEl = document.getElementById('matchDefs');
+  termsEl.innerHTML=''; defsEl.innerHTML='';
+  const terms = MP.map((p,i)=>({text:p[0], id:i}));
+  const defs = MP.map((p,i)=>({text:p[1], id:i}));
+  shuffleArr(terms).forEach(t=>{
+    const d = document.createElement('div');
+    d.className='match-item'; d.textContent=t.text; d.dataset.id=t.id; d.dataset.type='term';
+    d.addEventListener('click',()=>selectMatch(d));
+    termsEl.appendChild(d);
+  });
+  shuffleArr(defs).forEach(f=>{
+    const d = document.createElement('div');
+    d.className='match-item'; d.textContent=f.text; d.dataset.id=f.id; d.dataset.type='def';
+    d.addEventListener('click',()=>selectMatch(d));
+    defsEl.appendChild(d);
+  });
+  updateMatchStatus();
+}
+function updateMatchStatus(){ document.getElementById('matchStatus').textContent = 'Emparejadas: '+matchState.matched+' / '+MP.length; }
+function selectMatch(el){
+  if(el.classList.contains('matched')) return;
+  if(el.dataset.type==='term'){
+    if(matchState.selTerm) matchState.selTerm.classList.remove('selected');
+    matchState.selTerm = el; el.classList.add('selected');
+  } else {
+    if(matchState.selDef) matchState.selDef.classList.remove('selected');
+    matchState.selDef = el; el.classList.add('selected');
+  }
+  if(matchState.selTerm && matchState.selDef){
+    const t = matchState.selTerm, d = matchState.selDef;
+    if(t.dataset.id === d.dataset.id){
+      t.classList.remove('selected'); d.classList.remove('selected');
+      t.classList.add('matched'); d.classList.add('matched');
+      matchState.matched++; updateMatchStatus();
+      matchState.selTerm=null; matchState.selDef=null;
+    } else {
+      t.classList.add('wrong'); d.classList.add('wrong');
+      setTimeout(()=>{
+        t.classList.remove('wrong','selected'); d.classList.remove('wrong','selected');
+        matchState.selTerm=null; matchState.selDef=null;
+      },550);
+    }
+  }
+}
+document.getElementById('matchReset').addEventListener('click', renderMatchGame);
+renderMatchGame();
+
+/* =================================================================
+   PIZARRA TÁCTICA
+================================================================= */
+const dotsG = document.getElementById('dots');
+function renderFormation(key){
+  const f = FORMATIONS[key];
+  document.getElementById('boardTitle').textContent = f.title;
+  document.getElementById('boardDesc').textContent = f.desc;
+  dotsG.innerHTML='';
+  f.pos.forEach((p,i)=>{
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p[0]); c.setAttribute('cy',p[1]); c.setAttribute('r',14);
+    c.setAttribute('fill', key==='zona' ? '#0D1B2A' : '#FF6F00');
+    c.setAttribute('stroke','#fff'); c.setAttribute('stroke-width','2');
+    c.classList.add('dot');
+    dotsG.appendChild(c);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',p[0]); t.setAttribute('y',p[1]+4); t.setAttribute('text-anchor','middle');
+    t.setAttribute('fill','#fff'); t.setAttribute('font-size','12'); t.setAttribute('font-family','Poppins');
+    t.textContent = (i+1);
+    dotsG.appendChild(t);
+  });
+}
+document.querySelectorAll('#boardControls button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#boardControls button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFormation(btn.dataset.f);
+  });
+});
+renderFormation('overload');
+
+/* =================================================================
+   EXAMEN
+================================================================= */
+let examQuestions = [], examIndex = 0, examAnswers = [], timerEnabled=false, qTimerInterval=null;
+
+document.getElementById('startExamBtn').addEventListener('click', startExam);
+document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+document.getElementById('retryBtn').addEventListener('click', startExam);
+document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+document.getElementById('toggleReportBtn').addEventListener('click', ()=>{
+  const r = document.getElementById('reportContent');
+  r.style.display = r.style.display==='none' ? 'block' : 'none';
+});
+
+function startExam(){
+  timerEnabled = document.getElementById('timerToggle').checked;
+  const pool = shuffleArr(QB);
+  examQuestions = pool.slice(0,30);
+  examIndex = 0;
+  examAnswers = new Array(30).fill(null);
+  document.getElementById('examStart').style.display='none';
+  document.getElementById('examResults').style.display='none';
+  document.getElementById('examQuizScreen').style.display='block';
+  renderQuestion();
+}
+
+function renderQuestion(){
+  clearInterval(qTimerInterval);
+  const q = examQuestions[examIndex];
+  document.getElementById('qCounter').textContent = 'Pregunta '+(examIndex+1)+' / 30';
+  document.getElementById('examProgressFill').style.width = ((examIndex)/30*100)+'%';
+  document.getElementById('qText').textContent = q[1];
+  const optsEl = document.getElementById('qOptions');
+  optsEl.innerHTML='';
+  q[2].forEach((opt,i)=>{
+    const b = document.createElement('button');
+    b.className='opt-btn'; b.textContent = opt;
+    b.addEventListener('click',()=>answerQuestion(i));
+    optsEl.appendChild(b);
+  });
+  document.getElementById('qFeedback').style.display='none';
+  document.getElementById('nextBtn').disabled = true;
+  const timerEl = document.getElementById('qTimer');
+  if(timerEnabled){
+    let t=60; timerEl.textContent = '⏱ '+t+'s';
+    qTimerInterval = setInterval(()=>{
+      t--; timerEl.textContent='⏱ '+t+'s';
+      if(t<=0){ clearInterval(qTimerInterval); if(examAnswers[examIndex]===null) answerQuestion(-1); }
+    },1000);
+  } else { timerEl.textContent=''; }
+}
+
+function answerQuestion(idx){
+  if(examAnswers[examIndex]!==null) return;
+  clearInterval(qTimerInterval);
+  const q = examQuestions[examIndex];
+  examAnswers[examIndex] = idx;
+  const buttons = document.querySelectorAll('#qOptions .opt-btn');
+  buttons.forEach((b,i)=>{
+    b.disabled = true;
+    if(i===q[3]) b.classList.add('correct');
+    else if(i===idx) b.classList.add('incorrect');
+  });
+  const fb = document.getElementById('qFeedback');
+  fb.style.display='block';
+  fb.innerHTML = (idx===q[3] ? '<strong style="color:var(--verde)">¡Correcto!</strong> ' : '<strong style="color:var(--rojo)">Incorrecto.</strong> ') + q[4];
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){
+  examIndex++;
+  if(examIndex<30) renderQuestion();
+  else finishExam();
+}
+
+function finishExam(){
+  document.getElementById('examQuizScreen').style.display='none';
+  let aciertos=0; const errorsByModule={};
+  const reportRows = [];
+  examQuestions.forEach((q,i)=>{
+    const isOk = examAnswers[i]===q[3];
+    if(isOk) aciertos++;
+    else errorsByModule[q[0]] = (errorsByModule[q[0]]||0)+1;
+    reportRows.push({n:i+1,pregunta:q[1],userA: examAnswers[i]>=0 ? q[2][examAnswers[i]] : '(sin responder)', correctA:q[2][q[3]], ok:isOk, exp:q[4]});
+  });
+  const errores = 30-aciertos;
+  const pct = Math.round(aciertos/30*100);
+  const ring = document.getElementById('scoreRing');
+  const color = pct>=70?'var(--verde)':pct>=50?'var(--amber)':'var(--rojo)';
+  ring.style.background = 'conic-gradient('+color+' '+(pct*3.6)+'deg, #E8EAED 0deg)';
+  ring.innerHTML = '<div style="background:#fff;border-radius:50%;width:112px;height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="color:'+color+'">'+pct+'</span><span style="font-size:.6rem;color:#8a94a6;">/ 100</span></div>';
+  document.getElementById('aciertosCount').textContent = aciertos;
+  document.getElementById('erroresCount').textContent = errores;
+
+  const recoBox = document.getElementById('recoBox');
+  const sortedMods = Object.entries(errorsByModule).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  if(sortedMods.length===0){
+    recoBox.innerHTML = '<div class="tip success"><strong>¡Excelente!</strong> No se detectaron errores concentrados en ningún módulo. Sigue reforzando con las flashcards.</div>';
+  } else {
+    let html = '<h3>Recomendaciones personalizadas</h3>';
+    sortedMods.forEach(([mod,count])=>{
+      html += '<div class="tip"><strong>'+MODULOS[mod]+'</strong> ('+count+' error(es)) — '+RECO[mod]+'</div>';
+    });
+    recoBox.innerHTML = html;
+  }
+
+  let reportHtml = '<h3>Reporte detallado</h3>';
+  reportRows.forEach(r=>{
+    reportHtml += '<div class="report-row '+(r.ok?'':'wrong')+'"><strong>P'+r.n+'.</strong> '+r.pregunta+'<br>Tu respuesta: <span class="'+(r.ok?'tag-ok':'tag-bad')+'">'+r.userA+'</span>'+(r.ok?'':' · Correcta: <span class="tag-ok">'+r.correctA+'</span>')+'<br><em style="color:#5b6577;">'+r.exp+'</em></div>';
+  });
+  document.getElementById('reportContent').innerHTML = reportHtml;
+  document.getElementById('reportContent').style.display='none';
+
+  document.getElementById('examResults').style.display='block';
+}
+</script>
+</body>
+</html>
