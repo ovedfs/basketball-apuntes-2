@@ -47,7 +47,7 @@
 **Cambios**: Mostrar "Tarjeta X / Y" y barra de progreso.
 **Prueba**: Navegar flashcards, verificar que el contador avanza correctamente.
 
-### 9. Temporizador configurable
+### 9. Temporizador configurable ✅ (commit 241be85)
 **Archivos**: `index.html` (JS en exam.js, HTML en inicio de examen)
 **Cambios**: Añadir selector de dificultad (Fácil: 90s, Normal: 60s, Difícil: 30s).
 **Prueba**: Iniciar examen con cada dificultad, verificar tiempo límite.
