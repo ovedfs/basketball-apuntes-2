@@ -52,7 +52,7 @@
 **Cambios**: Añadir selector de dificultad (Fácil: 90s, Normal: 60s, Difícil: 30s).
 **Prueba**: Iniciar examen con cada dificultad, verificar tiempo límite.
 
-### 10. Dark Mode
+### 10. Dark Mode ✅ (commit 994ee6e)
 **Archivos**: `index.html`
 **Cambios**: Añadir toggle, variables CSS para dark mode, persistencia en localStorage, respetar `prefers-color-scheme`.
 **Prueba**: Toggle, recargar página (debe persistir), verificar en modo oscuro del sistema.
