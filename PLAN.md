@@ -42,7 +42,7 @@
 **Cambios**: Usar Web Audio API para generar tonos suaves al acertar/fallar (opcional con toggle).
 **Prueba**: Activar sonido, responder correcta/incorrectamente, verificar que suena.
 
-### 8. Contador de flashcards
+### 8. Contador de flashcards ✅ (commit 367233b)
 **Archivos**: `index.html` (JS en flashcards.js)
 **Cambios**: Mostrar "Tarjeta X / Y" y barra de progreso.
 **Prueba**: Navegar flashcards, verificar que el contador avanza correctamente.
