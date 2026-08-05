@@ -37,10 +37,11 @@
 **Cambios**: Mejorar el tracking de sección activa con IntersectionObserver + indicar progreso en sidebar.
 **Prueba**: Scrollear por los 10 módulos, el sidebar debe marcar correctamente la sección actual.
 
-### 7. Feedback auditivo en examen
+### 7. Feedback auditivo en examen ✅ (commit bf99a57)
 **Archivos**: `index.html` (JS en exam.js)
 **Cambios**: Usar Web Audio API para generar tonos suaves al acertar/fallar (opcional con toggle).
 **Prueba**: Activar sonido, responder correcta/incorrectamente, verificar que suena.
+
 
 ### 8. Contador de flashcards ✅ (commit 367233b)
 **Archivos**: `index.html` (JS en flashcards.js)
