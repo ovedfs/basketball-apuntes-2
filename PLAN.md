@@ -3,13 +3,13 @@
 ## Fase 0: Setup del proyecto
 - [x] Crear `.clinerules`
 - [x] Crear `PLAN.md`
-- [ ] Inicializar repo Git y hacer commit inicial (`v1.0.0`)
-- [ ] Crear repo en GitHub y subir `main`
-- [ ] Desplegar en Netlify (deploy automático desde GitHub)
+- [x] Inicializar repo Git y hacer commit inicial (`v1.0.0`)
+- [x] Crear repo en GitHub y subir `main`
+- [x] Desplegar en Netlify (deploy automático desde GitHub) — https://candid-vacherin-52f2af.netlify.app
 
 ## Fase 1: Mejoras (1 commit / mejora, probar en navegador antes de commit)
 
-### 1. Separar JS en módodos
+### 1. Separar JS en módodos ✅ (commit 411b8e0)
 **Archivos**: Extraer JS monolítico en `js/app.js`, `js/questions.js`, `js/flashcards.js`, `js/games.js`, `js/exam.js`
 **Prueba**: Todas las funcionalidades (apuntes, flashcards, juegos, examen) deben funcionar igual que antes.
 
@@ -23,7 +23,7 @@
 **Cambios**: Añadir placeholder con thumbnail usando `srcdoc` y cargar solo cuando sea visible (IntersectionObserver).
 **Prueba**: Abrir red lenta en DevTools, los iframes deben cargar solo al hacerse visibles.
 
-### 4. Externalizar banco de preguntas
+### 4. Externalizar banco de preguntas ✅ (commit 411b8e0)
 **Archivos**: Mover `const QB = [...]` de `index.html` a `js/questions.js`
 **Cambios**: El array QB queda en su propio módulo.
 **Prueba**: Flashcards y examen deben funcionar exactamente igual.
