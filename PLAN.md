@@ -13,7 +13,7 @@
 **Archivos**: Extraer JS monolítico en `js/app.js`, `js/questions.js`, `js/flashcards.js`, `js/games.js`, `js/exam.js`
 **Prueba**: Todas las funcionalidades (apuntes, flashcards, juegos, examen) deben funcionar igual que antes.
 
-### 2. Mejorar accesibilidad
+### 2. Mejorar accesibilidad ✅ (commit 5a1ff0a)
 **Archivos**: `index.html`
 **Cambios**: Añadir `aria-label`, `role`, `alt` texts a SVG y botones, landmarks semánticos (`<nav>`, `<main>`, `<aside>`)
 **Prueba**: Navegar con tabulación, verificar lectores de pantalla (inspeccionar con DevTools > Accessibility).
