@@ -18,7 +18,7 @@
 **Cambios**: Añadir `aria-label`, `role`, `alt` texts a SVG y botones, landmarks semánticos (`<nav>`, `<main>`, `<aside>`)
 **Prueba**: Navegar con tabulación, verificar lectores de pantalla (inspeccionar con DevTools > Accessibility).
 
-### 3. Lazy loading mejorado de iframes
+### 3. Lazy loading mejorado de iframes ✅ (commit 6c653af)
 **Archivos**: `index.html`
 **Cambios**: Añadir placeholder con thumbnail usando `srcdoc` y cargar solo cuando sea visible (IntersectionObserver).
 **Prueba**: Abrir red lenta en DevTools, los iframes deben cargar solo al hacerse visibles.
