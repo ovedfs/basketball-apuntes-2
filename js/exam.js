@@ -1,7 +1,10 @@
 /* =================================================================
    EXAMEN - Variables globales e inicialización
+   + persistencia en localStorage para retomar
 ================================================================= */
 let examQuestions = [], examIndex = 0, examAnswers = [], qSeconds=0, qTimerInterval=null;
+const EXAM_STATE_KEY = 'basquetpro-exam-state';
+let examStartTime = null;
 
 /* =================================================================
    Feedback auditivo (Web Audio API) — opcional, persistido en localStorage
@@ -38,15 +41,54 @@ function initExamSound(){
   });
 }
 
+/* --- Persistencia del estado del examen --- */
+function saveExamState(){
+  try {
+    localStorage.setItem(EXAM_STATE_KEY, JSON.stringify({
+      questions: examQuestions,
+      answers: examAnswers,
+      index: examIndex,
+      seconds: qSeconds,
+      startedAt: examStartTime
+    }));
+  } catch(e) {}
+}
+
+function clearExamState(){
+  try { localStorage.removeItem(EXAM_STATE_KEY); } catch(e) {}
+}
+
+function loadExamState(){
+  try {
+    const raw = localStorage.getItem(EXAM_STATE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
 /* =================================================================
    FUNCIONES DEL EXAMEN
 ================================================================= */
-function startExam(){
-  qSeconds = parseInt(document.getElementById('timerSelect').value,10)||0;
-  const pool = shuffleArr(QB);
-  examQuestions = pool.slice(0,30);
-  examIndex = 0;
-  examAnswers = new Array(30).fill(null);
+function startExam(resume){
+  if(resume){
+    const saved = loadExamState();
+    if(saved){
+      examQuestions = saved.questions;
+      examAnswers = saved.answers;
+      examIndex = saved.index;
+      qSeconds = saved.seconds;
+      examStartTime = saved.startedAt;
+    }
+  } else {
+    qSeconds = parseInt(document.getElementById('timerSelect').value,10)||0;
+    const pool = shuffleArr(QB);
+    examQuestions = pool.slice(0,30);
+    examIndex = 0;
+    examAnswers = new Array(30).fill(null);
+    examStartTime = Date.now();
+    const resumeBtn = document.getElementById('resumeExamBtn');
+    if(resumeBtn) resumeBtn.style.display='none';
+  }
   document.getElementById('examStart').style.display='none';
   document.getElementById('examResults').style.display='none';
   document.getElementById('examQuizScreen').style.display='block';
@@ -66,9 +108,10 @@ function renderQuestion(){  clearInterval(qTimerInterval);  const q = examQues
     optsEl.appendChild(b);
   });
   document.getElementById('qFeedback').style.display='none';
-  document.getElementById('nextBtn').disabled = true;
+  const allAnswered = examAnswers[examIndex] !== null;
+  document.getElementById('nextBtn').disabled = !allAnswered;
   const timerEl = document.getElementById('qTimer');
-  if(qSeconds>0){
+  if(qSeconds>0 && !allAnswered){
     let t=qSeconds; timerEl.textContent = '⏱ '+t+'s';
     qTimerInterval = setInterval(()=>{
       t--; timerEl.textContent='⏱ '+t+'s';
@@ -93,12 +136,14 @@ function answerQuestion(idx){
   fb.style.display='block';
   fb.innerHTML = (idx===q[3] ? '<strong style="color:var(--verde)">¡Correcto!</strong> ' : '<strong style="color:var(--rojo)">Incorrecto.</strong> ') + q[4];
   document.getElementById('nextBtn').disabled = false;
+  saveExamState();
 }
 
 function nextQuestion(){
   examIndex++;
   if(examIndex<30) renderQuestion();
   else finishExam();
+  saveExamState();
 }
 
 function finishExam(){
@@ -138,6 +183,7 @@ function finishExam(){
   });
   document.getElementById('reportContent').innerHTML = reportHtml;
   document.getElementById('reportContent').style.display='none';
+  clearExamState();
 
   document.getElementById('examResults').style.display='block';
 }
@@ -145,12 +191,34 @@ function finishExam(){
 /* =================================================================
    EVENT LISTENERS DEL EXAMEN
 ================================================================= */
-document.getElementById('startExamBtn').addEventListener('click', startExam);
+document.getElementById('startExamBtn').addEventListener('click', ()=>startExam(false));
 document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-document.getElementById('retryBtn').addEventListener('click', startExam);
+document.getElementById('retryBtn').addEventListener('click', ()=>startExam(false));
+const resumeBtn = document.getElementById('resumeExamBtn');
+if(resumeBtn) resumeBtn.addEventListener('click', ()=>startExam(true));
 document.getElementById('printBtn').addEventListener('click', ()=>window.print());
 document.getElementById('toggleReportBtn').addEventListener('click', ()=>{
   const r = document.getElementById('reportContent');
   r.style.display = r.style.display==='none' ? 'block' : 'none';
 });
+(function(){
+  const saved = loadExamState();
+  const resumeBtn = document.getElementById("resumeExamBtn");
+  if(saved && resumeBtn){
+    const answered = saved.answers.filter(a=>a!==null).length;
+    const d = document.createElement("div");
+    d.className="tip";
+    d.innerHTML = "<strong>Examen guardado</strong> — has respondido " + answered + "/30 preguntas.";
+    const btn = document.createElement("button");
+    btn.className="btn-secondary";
+    btn.textContent="Retomar";
+    btn.style.marginLeft="auto";
+    btn.style.fontSize=".75rem";
+    btn.addEventListener("click", ()=>startExam(true));
+    d.appendChild(btn);
+    resumeBtn.replaceWith(d);
+  } else if(resumeBtn){
+    resumeBtn.style.display="none";
+  }
+})();
 initExamSound();

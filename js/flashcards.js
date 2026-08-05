@@ -19,6 +19,7 @@ FC.forEach(([front,back])=>{
 
 /* =================================================================
    Estudio por tarjetas: contador "Tarjeta X / Y" + barra de progreso
+   + persistencia en localStorage
 ================================================================= */
 const fcStudyCard = document.getElementById('fcStudyCard');
 if(fcStudyCard){
@@ -30,7 +31,17 @@ if(fcStudyCard){
   const fcPrev      = document.getElementById('fcPrev');
   const fcNext      = document.getElementById('fcNext');
   const total = FC.length;
+  const FC_INDEX_KEY = 'basquetpro-fc-index';
   let fcIndex = 0;
+
+  try {
+    const saved = parseInt(localStorage.getItem(FC_INDEX_KEY), 10);
+    if (!isNaN(saved) && saved >= 0 && saved < total) fcIndex = saved;
+  } catch(e) {}
+
+  function saveIndex(){
+    try { localStorage.setItem(FC_INDEX_KEY, fcIndex); } catch(e) {}
+  }
 
   function renderStudyCard(){
     fcStudyFront.innerHTML = FC[fcIndex][0] + '<span class="fc-hint">clic para girar</span>';
@@ -42,6 +53,7 @@ if(fcStudyCard){
     fcStudyFill.style.width = pct+'%';
     fcPrev.disabled = fcIndex===0;
     fcNext.disabled = fcIndex===total-1;
+    saveIndex();
   }
 
   fcStudyCard.setAttribute('role','button');
