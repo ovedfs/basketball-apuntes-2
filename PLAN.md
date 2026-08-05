@@ -28,7 +28,7 @@
 **Cambios**: El array QB queda en su propio módulo.
 **Prueba**: Flashcards y examen deben funcionar exactamente igual.
 
-### 5. Service Worker + PWA
+### 5. Service Worker + PWA ✅ (commit bb6f9f7)
 **Archivos**: `sw.js`, `manifest.json`, modificar `index.html` (registrar SW + link manifest)
 **Prueba**: En DevTools > Application > Service Workers, verificar que se registra y cachea correctamente. Abrir en modo offline.
 
