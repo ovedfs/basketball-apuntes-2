@@ -235,6 +235,21 @@ footer{text-align:center;padding:2rem;color:#8a94a6;font-size:.8rem;}
 [data-theme="dark"] .timer-select{background:#1f2833;color:#e6edf3;border-color:#33506e;}
 [data-theme="dark"] .opt-btn:disabled{color:#7d8794;}
 [data-theme="dark"] .theme-toggle{color:#fff;}
+
+/* ===== Impresión / PDF ===== */
+@media print{
+  body{background:#fff;color:#000;}
+  .topbar, .sidebar, .tabs, .theme-toggle, .no-print, .fc-grid, .board-wrap{display:none!important;}
+  main.view{display:none!important;}
+  main.view#view-examen{display:block!important;}
+  #view-examen > *:not(#examResults):not(#reportContent){display:none!important;}
+  #examResults{box-shadow:none;border-radius:0;padding:0;margin:0;}
+  .report-row{break-inside:avoid;margin-bottom:.7rem;padding:.5rem;border:1px solid #ddd;border-radius:6px;}
+  .report-row.wrong{background:#fff3f3;}
+  .score-ring{margin:0 auto;}
+  .result-box{border:2px solid currentColor;padding:.6rem;}
+  @page{margin:1.5cm;size:A4;}
+}
 </style>
 </head>
 <body>

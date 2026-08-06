@@ -204,7 +204,19 @@ const resumeBtnEl = document.getElementById('resumeExamBtn');
 if(resumeBtnEl) resumeBtnEl.addEventListener('click', ()=>startExam(true));
 
 const printBtnEl = document.getElementById('printBtn');
-if(printBtnEl) printBtnEl.addEventListener('click', ()=>window.print());
+if(printBtnEl) printBtnEl.addEventListener('click', ()=>{
+  const reportContent = document.getElementById('reportContent');
+  const toggleBtn = document.getElementById('toggleReportBtn');
+  if(reportContent){
+    if(reportContent.style.display === 'none'){
+      reportContent.style.display = 'block';
+      if(toggleBtn){
+        toggleBtn.textContent = '📄 Ocultar reporte';
+      }
+    }
+  }
+  setTimeout(()=>window.print(), 100);
+});
 
 const toggleBtn = document.getElementById('toggleReportBtn');
 if(toggleBtn) toggleBtn.addEventListener('click', ()=>{
