@@ -141,13 +141,18 @@ function answerQuestion(idx){
 
 function nextQuestion(){
   examIndex++;
-  if(examIndex<30) renderQuestion();
+  if(examIndex < examQuestions.length) renderQuestion();
   else finishExam();
   saveExamState();
 }
 
+function finishExamEarly(){
+  finishExam();
+}
+
 function finishExam(){
   document.getElementById('examQuizScreen').style.display='none';
+  const total = examQuestions.length;
   let aciertos=0; const errorsByModule={};
   const reportRows = [];
   examQuestions.forEach((q,i)=>{
@@ -156,8 +161,8 @@ function finishExam(){
     else errorsByModule[q[0]] = (errorsByModule[q[0]]||0)+1;
     reportRows.push({n:i+1,pregunta:q[1],userA: examAnswers[i]>=0 ? q[2][examAnswers[i]] : '(sin responder)', correctA:q[2][q[3]], ok:isOk, exp:q[4]});
   });
-  const errores = 30-aciertos;
-  const pct = Math.round(aciertos/30*100);
+  const errores = total-aciertos;
+  const pct = total>0 ? Math.round(aciertos/total*100) : 0;
   const ring = document.getElementById('scoreRing');
   const color = pct>=70?'var(--verde)':pct>=50?'var(--amber)':'var(--rojo)';
   ring.style.background = 'conic-gradient('+color+' '+(pct*3.6)+'deg, #E8EAED 0deg)';
@@ -203,26 +208,75 @@ if(retryBtn) retryBtn.addEventListener('click', ()=>startExam(false));
 const resumeBtnEl = document.getElementById('resumeExamBtn');
 if(resumeBtnEl) resumeBtnEl.addEventListener('click', ()=>startExam(true));
 
+const finishEarlyBtn = document.getElementById('finishExamEarlyBtn');
+if(finishEarlyBtn) finishEarlyBtn.addEventListener('click', finishExamEarly);
+
 const printBtnEl = document.getElementById('printBtn');
 if(printBtnEl) printBtnEl.addEventListener('click', ()=>{
   const reportContent = document.getElementById('reportContent');
-  const toggleBtn = document.getElementById('toggleReportBtn');
-  if(reportContent){
-    if(reportContent.style.display === 'none'){
-      reportContent.style.display = 'block';
-      if(toggleBtn){
-        toggleBtn.textContent = '📄 Ocultar reporte';
-      }
-      reportContent.scrollIntoView({behavior: 'smooth', block: 'start'});
-    }
-  }
-  const tryPrint = () => {
-    window.print();
-  };
-  if (document.readyState === 'complete') {
-    setTimeout(tryPrint, 300);
-  } else {
-    window.addEventListener('load', () => setTimeout(tryPrint, 300));
+  const scoreRing = document.getElementById('scoreRing');
+  const aciertosCount = document.getElementById('aciertosCount');
+  const erroresCount = document.getElementById('erroresCount');
+  const recoBox = document.getElementById('recoBox');
+  
+  if(!reportContent || !scoreRing) return;
+  
+  const reportHtml = reportContent.innerHTML;
+  const total = examQuestions.length;
+  const aciertos = parseInt(aciertosCount.textContent) || 0;
+  const errores = parseInt(erroresCount.textContent) || 0;
+  const pct = total>0 ? Math.round(aciertos/total*100) : 0;
+  const color = pct>=70?'#1E8E5A':pct>=50?'#B7791F':'#C62828';
+  
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  if(printWindow){
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Resultados del Examen - BasquetPro</title>
+        <style>
+          body{font-family:'Inter',Arial,sans-serif;max-width:800px;margin:0 auto;padding:2rem;color:#000;}
+          h1{color:#0D1B2A;border-bottom:3px solid #FF6F00;padding-bottom:.5rem;}
+          .score-ring{width:120px;height:120px;border-radius:50%;background:conic-gradient(${color} ${pct*3.6}deg, #E8EAED 0deg);display:flex;align-items:center;justify-content:center;margin:1rem auto;}
+          .score-inner{background:#fff;width:100px;height:100px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+          .score-pct{font-size:2rem;font-weight:800;color:${color};}
+          .score-label{font-size:.7rem;color:#666;}
+          .results-grid{display:flex;gap:1rem;justify-content:center;margin:1.5rem 0;}
+          .result-box{border:2px solid;border-radius:10px;padding:1rem;text-align:center;flex:1;}
+          .result-box.ok{border-color:#1E8E5A;color:#1E8E5A;}
+          .result-box.bad{border-color:#C62828;color:#C62828;}
+          .result-box .big{font-size:2rem;font-weight:800;}
+          .tip{background:#FFF3E0;border-left:4px solid #B7791F;padding:1rem;margin:1rem 0;border-radius:6px;}
+          .tip strong{color:#B7791F;}
+          h3{margin-top:2rem;color:#0D1B2A;}
+          .report-row{border:1px solid #ddd;border-radius:6px;padding:.7rem;margin-bottom:.6rem;break-inside:avoid;}
+          .report-row.wrong{background:#fff3f3;}
+          .tag-ok{color:#1E8E5A;font-weight:600;}
+          .tag-bad{color:#C62828;font-weight:600;}
+          @media print{body{padding:0;} .no-print{display:none;}}
+        </style>
+      </head>
+      <body>
+        <h1>📊 Resultados del Examen</h1>
+        <div class="score-ring">
+          <div class="score-inner">
+            <div class="score-pct">${pct}</div>
+            <div class="score-label">/ 100</div>
+          </div>
+        </div>
+        <div class="results-grid">
+          <div class="result-box ok"><div class="big">${aciertos}</div>Aciertos</div>
+          <div class="result-box bad"><div class="big">${errores}</div>Errores</div>
+        </div>
+        ${recoBox ? '<div>'+recoBox.innerHTML+'</div>' : ''}
+        <h3>Reporte Detallado</h3>
+        <div>${reportHtml}</div>
+        <script>window.onload=function(){window.print();}</script>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
   }
 });
 
