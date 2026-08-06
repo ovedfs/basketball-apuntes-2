@@ -213,9 +213,17 @@ if(printBtnEl) printBtnEl.addEventListener('click', ()=>{
       if(toggleBtn){
         toggleBtn.textContent = '📄 Ocultar reporte';
       }
+      reportContent.scrollIntoView({behavior: 'smooth', block: 'start'});
     }
   }
-  setTimeout(()=>window.print(), 100);
+  const tryPrint = () => {
+    window.print();
+  };
+  if (document.readyState === 'complete') {
+    setTimeout(tryPrint, 300);
+  } else {
+    window.addEventListener('load', () => setTimeout(tryPrint, 300));
+  }
 });
 
 const toggleBtn = document.getElementById('toggleReportBtn');
