@@ -2,7 +2,7 @@
 
 > Plataforma educativa interactiva para el estudio de la metodología técnica y táctica del baloncesto.
 
-🔗 **Demo en vivo**: [https://candid-vacherin-52f2af.netlify.app](https://candid-vacherin-52f2af.netlify.app)
+🔗 **Demo en vivo**: [https://apuntes-basket2.netlify.app](https://apuntes-basket2.netlify.app)
 
 ---
 
