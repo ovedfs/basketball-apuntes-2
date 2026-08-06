@@ -63,9 +63,9 @@
 **Cambios**: Guardar estado de flashcards vistas y último examen, permitir retomar.
 **Prueba**: Completar parcialmente flashcards, recargar, verificar que se retoma desde donde se dejó.
 
-### 12. Exportar reporte a PDF
-**Archivos**: `index.html` (JS en exam.js)
-**Cambios**: Usar `window.print()` mejorado con estilo específico para PDF o librería ligera.
+### 12. Exportar reporte a PDF ✅ (commit 17e8ebd)
+**Archivos**: `index.html`, `js/exam.js`
+**Cambios**: Usar `window.print()` mejorado con estilos específicos para PDF (solo resultados del examen).
 **Prueba**: Hacer un examen, generar PDF, verificar formato.
 
 ---
