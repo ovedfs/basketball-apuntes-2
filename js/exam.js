@@ -191,15 +191,25 @@ function finishExam(){
 /* =================================================================
    EVENT LISTENERS DEL EXAMEN
 ================================================================= */
-document.getElementById('startExamBtn').addEventListener('click', ()=>startExam(false));
-document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-document.getElementById('retryBtn').addEventListener('click', ()=>startExam(false));
-const resumeBtn = document.getElementById('resumeExamBtn');
-if(resumeBtn) resumeBtn.addEventListener('click', ()=>startExam(true));
-document.getElementById('printBtn').addEventListener('click', ()=>window.print());
-document.getElementById('toggleReportBtn').addEventListener('click', ()=>{
+const startBtn = document.getElementById('startExamBtn');
+if(startBtn) startBtn.addEventListener('click', ()=>startExam(false));
+
+const nextBtnEl = document.getElementById('nextBtn');
+if(nextBtnEl) nextBtnEl.addEventListener('click', nextQuestion);
+
+const retryBtn = document.getElementById('retryBtn');
+if(retryBtn) retryBtn.addEventListener('click', ()=>startExam(false));
+
+const resumeBtnEl = document.getElementById('resumeExamBtn');
+if(resumeBtnEl) resumeBtnEl.addEventListener('click', ()=>startExam(true));
+
+const printBtnEl = document.getElementById('printBtn');
+if(printBtnEl) printBtnEl.addEventListener('click', ()=>window.print());
+
+const toggleBtn = document.getElementById('toggleReportBtn');
+if(toggleBtn) toggleBtn.addEventListener('click', ()=>{
   const r = document.getElementById('reportContent');
-  r.style.display = r.style.display==='none' ? 'block' : 'none';
+  if(r) r.style.display = r.style.display==='none' ? 'block' : 'none';
 });
 (function(){
   const saved = loadExamState();

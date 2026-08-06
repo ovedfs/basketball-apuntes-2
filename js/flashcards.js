@@ -1,28 +1,32 @@
 /* =================================================================
    FLASHCARDS render (cuadrícula completa)
 ================================================================= */
-const fcGrid = document.getElementById('fcGrid');
-FC.forEach(([front,back])=>{
-  const el = document.createElement('div');
-  el.className='fc';
-  el.setAttribute('role','button');
-  el.setAttribute('tabindex','0');
-  el.setAttribute('aria-label','Tarjeta flash: '+front+'. Pulsa Entre o espacio para ver la respuesta');
-  el.innerHTML = '<div class="fc-inner"><div class="fc-face fc-front">'+front+'<span class="fc-hint">clic para girar</span></div><div class="fc-face fc-back">'+back+'</div></div>';
-  const flip=()=>el.classList.toggle('flipped');
-  el.addEventListener('click',flip);
-  el.addEventListener('keydown',(e)=>{
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}
-  });
-  fcGrid.appendChild(el);
-});
+if(typeof FC !== 'undefined'){
+  const fcGrid = document.getElementById('fcGrid');
+  if(fcGrid){
+    FC.forEach(([front,back])=>{
+      const el = document.createElement('div');
+      el.className='fc';
+      el.setAttribute('role','button');
+      el.setAttribute('tabindex','0');
+      el.setAttribute('aria-label','Tarjeta flash: '+front+'. Pulsa Entre o espacio para ver la respuesta');
+      el.innerHTML = '<div class="fc-inner"><div class="fc-face fc-front">'+front+'<span class="fc-hint">clic para girar</span></div><div class="fc-face fc-back">'+back+'</div></div>';
+      const flip=()=>el.classList.toggle('flipped');
+      el.addEventListener('click',flip);
+      el.addEventListener('keydown',(e)=>{
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();}
+      });
+      fcGrid.appendChild(el);
+    });
+  }
+}
 
 /* =================================================================
    Estudio por tarjetas: contador "Tarjeta X / Y" + barra de progreso
    + persistencia en localStorage
 ================================================================= */
 const fcStudyCard = document.getElementById('fcStudyCard');
-if(fcStudyCard){
+if(fcStudyCard && typeof FC !== 'undefined'){
   const fcCounter   = document.getElementById('fcCounter');
   const fcStudyPct  = document.getElementById('fcStudyPct');
   const fcStudyFill = document.getElementById('fcStudyFill');
@@ -37,7 +41,7 @@ if(fcStudyCard){
   try {
     const saved = parseInt(localStorage.getItem(FC_INDEX_KEY), 10);
     if (!isNaN(saved) && saved >= 0 && saved < total) fcIndex = saved;
-  } catch(e) {}
+  } catch(e) { console.error('[Flashcards] Error leyendo localStorage:', e); }
 
   function saveIndex(){
     try { localStorage.setItem(FC_INDEX_KEY, fcIndex); } catch(e) {}
